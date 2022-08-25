@@ -1,3 +1,5 @@
+using EenJaarGratis.Service.Handlers.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EenJaarGratis.UI.Api.Controllers;
@@ -7,17 +9,19 @@ namespace EenJaarGratis.UI.Api.Controllers;
 public class PlayerController : ControllerBase
 {
     private readonly ILogger<PlayerController> _logger;
+    private readonly IMediator _mediator;
 
-    public PlayerController(ILogger<PlayerController> logger)
+    public PlayerController(ILogger<PlayerController> logger, IMediator mediator)
     {
         _logger = logger;
+        _mediator = mediator;
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public IActionResult Get(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Get all players");
-        throw new NotImplementedException();
+        return Ok(_mediator.Send(new GetPlayersRequest(), cancellationToken));
     }
 
     [HttpGet("{id:int}")]
@@ -28,10 +32,10 @@ public class PlayerController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post()
+    public IActionResult Post(CreatePlayerRequest request)
     {
         _logger.LogInformation("Create player");
-        throw new NotImplementedException();
+        return Ok(_mediator.Send(request));
     }
 
     [HttpPut]
