@@ -9,7 +9,8 @@ public static class Startup
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<Context>(options => options.UseInMemoryDatabase(configuration.GetConnectionString("default")));
+        // services.AddDbContext<Context>(options => options.UseInMemoryDatabase(configuration.GetConnectionString("default")));
+        services.AddDbContext<Context>(options => options.UseSqlite(configuration.GetConnectionString("default")));
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         return services;
     }

@@ -7,6 +7,7 @@ public class Context : DbContext
 {
     public Context(DbContextOptions options) : base(options)
     {
+        Database.Migrate();
     }
 
     public DbSet<Player> Players { get; set; } = null!;
