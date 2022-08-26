@@ -1,5 +1,6 @@
 <template>
-  <nav>
+  <NavigationBar></NavigationBar>
+-  <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav>
@@ -28,3 +29,9 @@ nav {
   }
 }
 </style>
+<script>
+import NavigationBar from "@/components/navigation";
+export default {
+  components: {NavigationBar}
+}
+</script>
