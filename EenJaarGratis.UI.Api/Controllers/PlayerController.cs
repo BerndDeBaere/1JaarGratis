@@ -24,13 +24,6 @@ public class PlayerController : ControllerBase
         return Ok(_mediator.Send(new GetPlayersRequest(), cancellationToken));
     }
 
-    [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
-    {
-        _logger.LogInformation("Get player with id {id}", id);
-        throw new NotImplementedException();
-    }
-
     [HttpPost]
     public IActionResult Post(CreatePlayerRequest request)
     {
@@ -39,16 +32,16 @@ public class PlayerController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Put()
+    public IActionResult Put(UpdatePlayerRequest request)
     {
         _logger.LogInformation("Update player");
-        throw new NotImplementedException();
+        return Ok(_mediator.Send(request));
     }
 
     [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(int id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Delete player with id {id}", id);
-        throw new NotImplementedException();
+        return Ok(_mediator.Send(new DeletePlayerRequest {Id = id}, cancellationToken));
     }
 }

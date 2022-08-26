@@ -10,10 +10,7 @@ public static class Startup
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
         Storage.Startup.RegisterServices(services, configuration);
-        
-        services.AddMediatR(typeof(GetPlayersHandler));
-
-        
+        services.AddMediatR(typeof(Startup));
         services.AddAutoMapper(config => config.AddMaps(typeof(MapperProfile)));
         return services;
     }

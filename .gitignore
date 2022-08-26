@@ -2,5 +2,4 @@
 appsettings.*.json
 */bin
 */obj
-*/Properties
-*.db
+*/datasource

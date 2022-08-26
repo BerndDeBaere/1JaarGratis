@@ -17,7 +17,7 @@ public class CreatePlayerHandler : IRequestHandler<CreatePlayerRequest, PlayerRe
 
     public async Task<PlayerResponse> Handle(CreatePlayerRequest request, CancellationToken cancellationToken)
     {
-        var result = await _playerRepository.Insert(Player.Create(request.Name, request.Name), cancellationToken);
+        var result = await _playerRepository.Insert(Player.Create(request.Name, request.Code), cancellationToken);
         return new PlayerResponse
         {
             Name = result.Name

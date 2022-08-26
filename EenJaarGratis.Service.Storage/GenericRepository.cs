@@ -5,7 +5,7 @@ namespace EenJaarGratis.Service.Storage;
 public interface IBaseRepository<T, TId>
 {
     Task<List<T>> Get(CancellationToken cancellationToken);
-    Task<T?> GetById(TId id, CancellationToken cancellationToken);
+    Task<T?> GetById(TId id);
     Task<T> Insert(T model, CancellationToken cancellationToken);
     Task<T> Update(T model, CancellationToken cancellationToken);
     Task Delete(T model, CancellationToken cancellationToken);
@@ -24,7 +24,7 @@ public class BaseRepository<T, TId> : IBaseRepository<T, TId> where T : class
 
     public Task<List<T>> Get(CancellationToken cancellationToken) => _entities.ToListAsync(cancellationToken);
 
-    public Task<T?> GetById(TId id, CancellationToken cancellationToken) => _entities.FindAsync(id, cancellationToken).AsTask();
+    public Task<T?> GetById(TId id) => _entities.FindAsync(id).AsTask();
 
     public async Task<T> Insert(T model, CancellationToken cancellationToken)
     {
