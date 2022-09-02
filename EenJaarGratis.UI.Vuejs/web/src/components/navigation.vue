@@ -1,13 +1,19 @@
 <template>
-    <n-menu>
-      <n-menu-item></n-menu-item>
-    </n-menu>
+  <n-menu v-model:value="activeKey" mode="horizontal" :options="menuOptions" />
 </template>
 
 <script>
 import {RouterLink} from "vue-router";
-import {NMenu, NMenuItem} from "naive-ui";
-import { h } from "vue";
+import {NMenu, NIcon} from "naive-ui";
+import { h, ref} from "vue";
+import {
+  PeopleOutline as PlayersIcon,
+ChatbubbleOutline as QuestionsIcon
+} from "@vicons/ionicons5";
+
+function renderIcon(icon) {
+  return () => h(NIcon, null, { default: () => h(icon) });
+}
 
 const menuOptions = [
   {
@@ -15,26 +21,38 @@ const menuOptions = [
         RouterLink,
         {
           to: {
-            name: "home",
-            params: {
-              lang: "en-US"
-            }
+            name: "players"
           }
         },
-        { default: () => "Going Home" }
+        { default: () => "Spelers" }
     ),
     key: "go-back-home",
+    icon: renderIcon(PlayersIcon)
+  },
+  {
+    label: () => h(
+        RouterLink,
+        {
+          to: {
+            name: "about"
+          }
+        },
+        { default: () => "Vragen" }
+    ),
+    key: "go-back-home",
+    icon: renderIcon(QuestionsIcon)
   }
 ];
 
 export default {
   name: 'NavigationBar',
   components:{
-    NMenu,
-    NMenuItem
+    NMenu
   },
   setup(){
-    return menuOptions;
+    return {menuOptions,
+      activeKey: ref(null)
+    };
   }
 }
 </script>

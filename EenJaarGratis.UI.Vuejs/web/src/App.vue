@@ -1,9 +1,5 @@
 <template>
-  <NavigationBar></NavigationBar>
--  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <NavigationBar/>
   <router-view/>
 </template>
 
