@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.WebHost.UseUrls("http://*:9000");
 
 EenJaarGratis.Service.Handlers.Startup.RegisterServices(builder.Services, builder.Configuration);
 
@@ -19,6 +20,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(options =>
+{
+    options
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .AllowAnyMethod()
+        .SetIsOriginAllowed((string input) => true);
+});
 
 app.UseAuthorization();
 
