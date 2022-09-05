@@ -1,6 +1,8 @@
 <template>
+  <AppProvider>
   <NavigationBar/>
   <router-view/>
+  </AppProvider>
 </template>
 
 <style lang="scss">
@@ -26,8 +28,16 @@ nav {
 }
 </style>
 <script>
-import NavigationBar from "@/components/navigation";
+import NavigationBar from "@/components/NavigationBar";
+import AppProvider from "@/components/AppProvider";
+
 export default {
-  components: {NavigationBar}
+  components: {
+    AppProvider, NavigationBar
+  },
+  mounted() {
+    console.log("mount")
+    this.$store.dispatch("fetchPlayers")
+  }
 }
 </script>

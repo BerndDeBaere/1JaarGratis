@@ -1,13 +1,31 @@
 import { createStore } from 'vuex'
+import gateway from "@/service/gateway";
 
 export default createStore({
-  state: {
+  state() {
+    return {
+      players : []
+    }
   },
   getters: {
   },
   mutations: {
+    setPlayers(state, players){
+      state.players = players;
+    }
   },
   actions: {
+    async fetchPlayers({commit}){
+      try{
+        console.log('start fetching data')
+        const data = await gateway.Players.get();
+        console.log(data.result);
+         commit("setPlayers", data.result);
+      }
+      catch (error){
+        console.error(error)
+      }
+    }
   },
   modules: {
   }
