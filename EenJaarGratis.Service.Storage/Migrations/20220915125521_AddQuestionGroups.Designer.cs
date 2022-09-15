@@ -2,6 +2,7 @@
 using EenJaarGratis.Service.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,12 +10,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassLibrary1EenJaarGratis.Service.Storage.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220915125521_AddQuestionGroups")]
+    partial class AddQuestionGroups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
 
             modelBuilder.Entity("EenJaarGratis.Service.Storage.Domain.Player", b =>
                 {
@@ -40,11 +42,6 @@ namespace ClassLibrary1EenJaarGratis.Service.Storage.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("PointsToShare")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(100);
 
                     b.Property<string>("Possibilities")
                         .IsRequired()
@@ -72,7 +69,7 @@ namespace ClassLibrary1EenJaarGratis.Service.Storage.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionGroups");
+                    b.ToTable("QuestionGroup");
                 });
 
             modelBuilder.Entity("PlayerQuestionGroup", b =>

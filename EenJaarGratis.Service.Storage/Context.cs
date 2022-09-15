@@ -11,5 +11,13 @@ namespace EenJaarGratis.Service.Storage
 
         public DbSet<Player> Players { get; set; } = null!;
         public DbSet<Question> Questions { get; set; } = null!;
+        public DbSet<QuestionGroup> QuestionGroups { get; set; } = null!;
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Question>()
+                .Property(q => q.PointsToShare)
+                .HasDefaultValue(100);
+        }
     }
 }

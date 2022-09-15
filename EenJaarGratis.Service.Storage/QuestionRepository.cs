@@ -2,11 +2,11 @@
 
 namespace EenJaarGratis.Service.Storage;
 
-public interface IQuestionRepository : IBaseRepository<Question, int>
+public interface IQuestionRepository : IBaseRepository<Question>
 {
 }
 
-public class QuestionRepository : BaseRepository<Question, int>, IQuestionRepository
+public class QuestionRepository : BaseRepository<Question>, IQuestionRepository
 {
     public QuestionRepository(Context context) : base(context)
     {

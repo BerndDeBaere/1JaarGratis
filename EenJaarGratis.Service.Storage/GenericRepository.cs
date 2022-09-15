@@ -1,19 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using EenJaarGratis.Service.Storage.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace EenJaarGratis.Service.Storage;
 
-public interface IBaseRepository<T, TId>
+public interface IBaseRepository<T>
 {
     Task<List<T>> Get(CancellationToken cancellationToken);
-    Task<T?> GetById(TId id);
+    Task<T> GetById(int id,params Expression<Func<T, object>>[] includes);
     Task<T> Insert(T model, CancellationToken cancellationToken);
     Task<T> Update(T model, CancellationToken cancellationToken);
     Task Delete(T model, CancellationToken cancellationToken);
 }
 
-public class BaseRepository<T, TId> : IBaseRepository<T, TId> where T : class
+public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
 {
-    private readonly Context _context;
+    internal readonly Context _context;
     private readonly DbSet<T> _entities;
 
     public BaseRepository(Context context)
@@ -24,7 +26,14 @@ public class BaseRepository<T, TId> : IBaseRepository<T, TId> where T : class
 
     public Task<List<T>> Get(CancellationToken cancellationToken) => _entities.ToListAsync(cancellationToken);
 
-    public Task<T?> GetById(TId id) => _entities.FindAsync(id).AsTask();
+    public Task<T> GetById(int id, params Expression<Func<T, object>>[] includes)
+    {
+        IQueryable<T> query = _entities.AsQueryable();
+
+        includes?.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+        return query.SingleOrDefaultAsync(x => x.Id == id)!;
+    }
 
     public async Task<T> Insert(T model, CancellationToken cancellationToken)
     {

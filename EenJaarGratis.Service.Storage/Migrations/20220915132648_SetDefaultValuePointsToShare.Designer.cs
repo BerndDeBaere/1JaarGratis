@@ -2,6 +2,7 @@
 using EenJaarGratis.Service.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassLibrary1EenJaarGratis.Service.Storage.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220915132648_SetDefaultValuePointsToShare")]
+    partial class SetDefaultValuePointsToShare
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -72,7 +74,7 @@ namespace ClassLibrary1EenJaarGratis.Service.Storage.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionGroups");
+                    b.ToTable("QuestionGroup");
                 });
 
             modelBuilder.Entity("PlayerQuestionGroup", b =>

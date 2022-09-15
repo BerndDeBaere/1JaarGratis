@@ -2,15 +2,17 @@
 
 namespace EenJaarGratis.Service.Storage.Domain;
 
-public class Player
+public class Player: BaseEntity
 {
     private Player()
     {
     }
 
-    [Key] public int Id { get; set; }
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!;
+    
+    public ICollection<QuestionGroup> QuestionGroups { get; set; } = new List<QuestionGroup>();
+
 
     public static Player Create(string name, string code) => new()
     {

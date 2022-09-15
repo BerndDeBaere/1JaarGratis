@@ -25,17 +25,17 @@ public class QuestionController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post(CreateQuestionRequest request)
+    public IActionResult Post(CreateQuestionRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Create question");
-        return Ok(_mediator.Send(request));
+        return Ok(_mediator.Send(request, cancellationToken));
     }
 
     [HttpPut]
-    public IActionResult Put(UpdateQuestionRequest request)
+    public IActionResult Put(UpdateQuestionRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Update question");
-        return Ok(_mediator.Send(request));
+        return Ok(_mediator.Send(request, cancellationToken));
     }
 
     [HttpDelete("{id:int}")]
@@ -43,5 +43,12 @@ public class QuestionController : Controller
     {
         _logger.LogInformation("Delete question with id {id}", id);
         return Ok(_mediator.Send(new DeleteQuestionRequest {Id = id}, cancellationToken));
+    }
+
+    [HttpPost("PlayerGroup")]
+    public IActionResult PostQuestionGroup(CreateQuestionGroupRequest request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Create Playergroup");
+        return Ok(_mediator.Send(request, cancellationToken));
     }
 }
