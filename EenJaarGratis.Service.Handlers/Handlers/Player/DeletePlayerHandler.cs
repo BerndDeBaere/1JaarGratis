@@ -1,10 +1,9 @@
-﻿using EenJaarGratis.Service.Handlers.Requests;
-using EenJaarGratis.Service.Handlers.Responses;
+﻿using AutoMapper;
 using EenJaarGratis.Service.Storage;
-using EenJaarGratis.Service.Storage.Domain;
+using EenJaarGratis.Services.Handlers.Requests.Player;
 using MediatR;
 
-namespace EenJaarGratis.Service.Handlers;
+namespace EenJaarGratis.Services.Handlers.Handlers.Player;
 
 public class DeletePlayerHandler : IRequestHandler<DeletePlayerRequest, bool>
 {
@@ -17,12 +16,11 @@ public class DeletePlayerHandler : IRequestHandler<DeletePlayerRequest, bool>
 
     public async Task<bool> Handle(DeletePlayerRequest request, CancellationToken cancellationToken)
     {
-        Player? player = await _playerRepository.GetById(request.Id);
+        Service.Storage.Domain.Player? player = await _playerRepository.GetById(request.Id);
         if (player is null)
         {
             return false;
         }
-
         await _playerRepository.Delete(player, cancellationToken);
         return true;
     }

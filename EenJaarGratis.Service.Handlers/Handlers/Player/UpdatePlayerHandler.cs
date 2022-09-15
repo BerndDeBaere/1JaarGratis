@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using EenJaarGratis.Service.Handlers.Requests;
-using EenJaarGratis.Service.Handlers.Responses;
 using EenJaarGratis.Service.Storage;
-using EenJaarGratis.Service.Storage.Domain;
+using EenJaarGratis.Services.Handlers.Requests.Player;
+using EenJaarGratis.Services.Handlers.Responses.Player;
+using EenJaarGratis.Services.Handlers.Responses.Question;
 using MediatR;
 
-namespace EenJaarGratis.Service.Handlers;
+namespace EenJaarGratis.Services.Handlers.Handlers.Player;
 
 public class UpdatePlayerHandler : IRequestHandler<UpdatePlayerRequest, PlayerResponse?>
 {
@@ -20,7 +20,7 @@ public class UpdatePlayerHandler : IRequestHandler<UpdatePlayerRequest, PlayerRe
 
     public async Task<PlayerResponse?> Handle(UpdatePlayerRequest request, CancellationToken cancellationToken)
     {
-        Player? player = await _playerRepository.GetById(request.Id);
+        Service.Storage.Domain.Player? player = await _playerRepository.GetById(request.Id);
         if (player is null)
         {
             return null;

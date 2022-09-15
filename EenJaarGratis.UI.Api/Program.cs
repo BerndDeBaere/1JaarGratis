@@ -1,5 +1,4 @@
-using System.Reflection;
-using ExceptionHandling.Middlewares;
+using EenJaarGratis.Services.Handlers;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.WebHost.UseUrls("https://*:9000");
-
-EenJaarGratis.Service.Handlers.Startup.RegisterServices(builder.Services, builder.Configuration);
+builder.Services.RegisterServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -28,7 +25,7 @@ app.UseCors(options =>
         .AllowAnyHeader()
         .AllowCredentials()
         .AllowAnyMethod()
-        .SetIsOriginAllowed((string input) => true);
+        .SetIsOriginAllowed(_ => true);
 });
 
 app.UseAuthorization();

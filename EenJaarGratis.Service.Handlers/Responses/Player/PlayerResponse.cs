@@ -1,4 +1,4 @@
-﻿namespace EenJaarGratis.Service.Handlers.Responses;
+﻿namespace EenJaarGratis.Services.Handlers.Responses.Player;
 
 public class PlayerResponse
 {

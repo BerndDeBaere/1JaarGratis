@@ -1,5 +1,4 @@
-﻿using EenJaarGratis.Service.Storage;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +11,7 @@ public static class Startup
         // services.AddDbContext<Context>(options => options.UseInMemoryDatabase(configuration.GetConnectionString("default")));
         services.AddDbContext<Context>(options => options.UseSqlite(configuration.GetConnectionString("default")));
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
         return services;
     }
 }

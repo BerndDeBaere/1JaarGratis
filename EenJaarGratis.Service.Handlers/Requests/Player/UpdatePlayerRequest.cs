@@ -1,7 +1,7 @@
-﻿using EenJaarGratis.Service.Handlers.Responses;
+﻿using EenJaarGratis.Services.Handlers.Responses.Player;
 using MediatR;
 
-namespace EenJaarGratis.Service.Handlers.Requests;
+namespace EenJaarGratis.Services.Handlers.Requests.Player;
 
 public class UpdatePlayerRequest : IRequest<PlayerResponse?>
 {

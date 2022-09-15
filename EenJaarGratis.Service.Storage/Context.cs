@@ -1,13 +1,15 @@
 ﻿using EenJaarGratis.Service.Storage.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace EenJaarGratis.Service.Storage;
-
-public class Context : DbContext
+namespace EenJaarGratis.Service.Storage
 {
-    public Context(DbContextOptions options) : base(options)
+    public class Context : DbContext
     {
-    }
+        public Context(DbContextOptions options) : base(options)
+        {
+        }
 
-    public DbSet<Player> Players { get; set; } = null!;
+        public DbSet<Player> Players { get; set; } = null!;
+        public DbSet<Question> Questions { get; set; } = null!;
+    }
 }

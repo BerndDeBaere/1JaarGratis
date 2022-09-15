@@ -34,6 +34,25 @@ namespace ClassLibrary1EenJaarGratis.Service.Storage.Migrations
 
                     b.ToTable("Players");
                 });
+
+            modelBuilder.Entity("EenJaarGratis.Service.Storage.Domain.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Possibilities")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Questions");
+                });
 #pragma warning restore 612, 618
         }
     }

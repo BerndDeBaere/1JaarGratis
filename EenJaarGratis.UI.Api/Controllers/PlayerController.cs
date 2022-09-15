@@ -1,4 +1,4 @@
-using EenJaarGratis.Service.Handlers.Requests;
+using EenJaarGratis.Services.Handlers.Requests.Player;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
