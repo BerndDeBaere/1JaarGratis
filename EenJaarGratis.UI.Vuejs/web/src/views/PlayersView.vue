@@ -1,37 +1,98 @@
 <template>
-  <n-data-table
-      :columns="columns"
-      :data="players"
-      :pagination="pagination"
-      :bordered="false"
-  />
+  <div id="blog-home">
+    <h1 class="text-center text-xl mt-4">Thoughts and Posts</h1>
+    <main class="container px-8 pt-24 mx-auto lg:px-4">
+
+      <div class="flex flex-wrap">
+        <article class="px-8 py-6 lg:w-1/3 md:w-full">
+          <div class="p-6 rounded-md">
+            <img class="object-cover object-center w-full h-40 mb-6 rounded"
+                src="http://via.placeholder.com/250x250"
+                alt="content"/>
+            <h2 class="mb-3 text-lg lg:text-2xl">
+              A blog post about my dog
+            </h2>
+            <p class="mb-4 leading-relaxed">
+              Super awesome doggo, with a great smile.
+            </p>
+            <a
+                href="#"
+                class="inline-flex items-center md:mb-2 lg:mb-0 hover:text-blue-400 "
+            >
+              Read More
+            </a>
+          </div>
+        </article>
+
+        <article class="px-8 py-6 lg:w-1/3 md:w-full">
+          <div class="p-6 rounded-md">
+            <img class="object-cover object-center w-full h-40 mb-6 rounded"
+                 src="http://via.placeholder.com/250x250"
+                 alt="content"/>
+            <h2 class="mb-3 text-lg lg:text-2xl">
+              A blog post about my dog
+            </h2>
+            <p class="mb-4 leading-relaxed">
+              Super awesome doggo, with a great smile.
+            </p>
+            <a
+                href="#"
+                class="inline-flex items-center md:mb-2 lg:mb-0 hover:text-blue-400 "
+            >
+              Read More
+            </a>
+          </div>
+        </article>
+
+        <article class="px-8 py-6 lg:w-1/3 md:w-full">
+          <div class="p-6 rounded-md">
+            <img class="object-cover object-center w-full h-40 mb-6 rounded"
+                 src="http://via.placeholder.com/250x250"
+                 alt="content"/>
+            <h2 class="mb-3 text-lg lg:text-2xl">
+              A blog post about my dog
+            </h2>
+            <p class="mb-4 leading-relaxed">
+              Super awesome doggo, with a great smile.
+            </p>
+            <a
+                href="#"
+                class="inline-flex items-center md:mb-2 lg:mb-0 hover:text-blue-400 "
+            >
+              Read More
+            </a>
+          </div>
+        </article>
+
+
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
-const createColumns = () => {
-  return [
-    {
-      title: "Id",
-      key: "id"
-    },
-    {
-      title: "Naam",
-      key: "name"
-    }
-  ];
-};
-
 export default {
   name: 'PlayersView',
-  setup(){
-    console.log("api: " + process.env.VUE_APP_TITLE)
+  setup() {
     return {
-      columns: createColumns(),
+      columns: [
+        {
+          title: "Id",
+          key: "id"
+        },
+        {
+          title: "Naam",
+          key: "name"
+        }
+      ],
       pagination: false
     };
   },
-  computed:{
-    players(){
+  mounted() {
+    this.$store.dispatch("fetchPlayers")
+  },
+  computed: {
+    players() {
       return this.$store.state.players;
     }
   }

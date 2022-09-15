@@ -1,4 +1,5 @@
 using System.Reflection;
+using ExceptionHandling.Middlewares;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.WebHost.UseUrls("http://*:9000");
+builder.WebHost.UseUrls("https://*:9000");
 
 EenJaarGratis.Service.Handlers.Startup.RegisterServices(builder.Services, builder.Configuration);
 
