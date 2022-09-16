@@ -12,6 +12,7 @@ public class MapperProfile : Profile
     {
         CreateMap<Player, PlayerResponse>();
         CreateMap<UpdatePlayerRequest, Player>().ForMember(x => x.Id, options => options.Ignore());
+        CreateMap<ScoreBoardPlayer, ScoreBoardPlayerResponse>();
 
         CreateMap<Question, QuestionResponse>()
             .ForMember(x => x.Question, options => options.MapFrom(src => src.QuestionText));

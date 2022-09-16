@@ -23,6 +23,13 @@ public class PlayerController : ControllerBase
         _logger.LogInformation("Get all players");
         return Ok(_mediator.Send(new GetPlayersRequest(), cancellationToken));
     }
+    
+    [HttpGet("Scoreboard")]
+    public IActionResult GetScoreboard(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Get ScoreBoard");
+        return Ok(_mediator.Send(new GetScoreBoardPlayersRequest(), cancellationToken));
+    }
 
     [HttpPost]
     public IActionResult Post(CreatePlayerRequest request)

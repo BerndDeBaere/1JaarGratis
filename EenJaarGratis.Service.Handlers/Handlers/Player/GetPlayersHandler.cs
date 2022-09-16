@@ -2,7 +2,6 @@
 using EenJaarGratis.Service.Storage;
 using EenJaarGratis.Services.Handlers.Requests.Player;
 using EenJaarGratis.Services.Handlers.Responses.Player;
-using EenJaarGratis.Services.Handlers.Responses.Question;
 using MediatR;
 
 namespace EenJaarGratis.Services.Handlers.Handlers.Player;
