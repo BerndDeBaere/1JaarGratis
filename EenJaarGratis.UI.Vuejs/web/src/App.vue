@@ -10,6 +10,9 @@ import NavigationBar from "@/components/NavigationBar";
 export default {
   components: {
     NavigationBar
+  },
+  mounted() {
+    this.$store.dispatch("fetchPlayers")
   }
 }
 </script>

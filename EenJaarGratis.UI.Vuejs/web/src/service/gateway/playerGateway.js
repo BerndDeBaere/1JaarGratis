@@ -14,13 +14,9 @@ export default {
         }
     },
 
-    async post(name, code){
+    async delete(player){
         try{
-            let response = await axios.post(api_root + "/Player",
-                {
-                    name, code
-                });
-            return response.data;
+            await axios.delete(api_root + "/Player/"+{...player}.id);
         }
         catch (err){
             console.error(err.response.data);

@@ -28,7 +28,6 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("fetchPlayers")
   },
   computed: {
     players() {

@@ -1,58 +1,48 @@
 <template>
+  <div class="container">
     <h1 class="text-center text-xl mt-4">Spelers</h1>
 
-  <table class="table-auto">
+  <table class="table">
     <thead>
     <tr>
-      <th>Song</th>
-      <th>Artist</th>
-      <th>Year</th>
+      <th scope="col">Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Code</th>
+      <th scope="col">Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-      <td>Malcolm Lockyer</td>
-      <td>1961</td>
-    </tr>
-    <tr>
-      <td>Witchy Woman</td>
-      <td>The Eagles</td>
-      <td>1972</td>
-    </tr>
-    <tr>
-      <td>Shining Star</td>
-      <td>Earth, Wind, and Fire</td>
-      <td>1975</td>
+    <tr v-for='player in players' :key="player.id">
+      <th scope="row">{{player.id}}</th>
+      <td>{{player.name}}</td>
+      <td>{{player.code}}</td>
+      <td>
+        <div class="btn-group" role="group" aria-label="Basic example">
+
+        <button class="btn btn-outline-secondary btn-sm" @click="editPlayer(player)">Edit</button>
+        <button class="btn btn-outline-danger btn-sm" @click="deletePlayer(player)">Delete</button>
+        </div>
+      </td>
     </tr>
     </tbody>
   </table>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'PlayersView',
-  setup() {
-    return {
-      columns: [
-        {
-          title: "Id",
-          key: "id"
-        },
-        {
-          title: "Naam",
-          key: "name"
-        }
-      ],
-      pagination: false
-    };
-  },
-  mounted() {
-    this.$store.dispatch("fetchPlayers")
-  },
   computed: {
     players() {
       return this.$store.state.players;
+    }
+  },
+  methods:{
+    deletePlayer(player){
+      this.$store.dispatch("deletePlayer", player)
+    },
+    editPlayer(player){
+      this.$store.dispatch("deletePlayer", player)
     }
   }
 }
