@@ -3,6 +3,9 @@ import PlayersView from "@/views/PlayersView";
 import ScoreboardView from "@/views/ScoreboardView";
 import HomeView from "@/views/HomeView";
 import QuestionsView from "@/views/QuestionsView";
+import PlayerView from "@/views/PlayerView";
+import QuestionView from "@/views/QuestionView";
+import ImportQuestionsView from "@/views/ImportQuestionsView";
 
 
 
@@ -11,6 +14,31 @@ const routes = [
     path: '/Spelers',
     name: 'players',
     component: PlayersView
+  },
+  {
+    path: '/Speler/:id',
+    name: 'editPlayer',
+    component: PlayerView
+  },
+  {
+    path: '/Speler',
+    name: 'newPlayer',
+    component: PlayerView
+  },
+  {
+    path: '/Vraag/:id',
+    name: 'editQuestion',
+    component: QuestionView
+  },
+  {
+    path: '/Vraag',
+    name: 'newQuestion',
+    component: QuestionView
+  },
+  {
+    path: '/Vragen/Importeren',
+    name: 'importQuestions',
+    component: ImportQuestionsView
   },
   {
     path: '/',

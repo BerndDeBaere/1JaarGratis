@@ -13,6 +13,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch("fetchPlayers")
+    this.$store.dispatch("fetchQuestions")
   }
 }
 </script>

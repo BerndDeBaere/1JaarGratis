@@ -1,37 +1,33 @@
 <template>
-  <div class="grid grid-cols-2">
-    <div class="flow">
-      <div v-for="index in 10" :key="index">{{index}}</div>
-    </div>
-    <div class="flow">
-      <div v-for="index in 10" :key="index">{{index}}</div>
-    </div>
+  <div class="fullPage">
+    <ScoreboardItem v-for="(player, index) in this.scoreboard" :key="player.id"
+                    :height=height :name=player.name :points = player.points :index = (index+1)></ScoreboardItem>
   </div>
 </template>
 
 <script>
+import {mapGetters, useStore} from "vuex";
+import ScoreboardItem from "@/components/ScoreboardItem";
+let store;
 export default {
-  name: 'PlayersView',
-  setup() {
-    return {
-      columns: [
-        {
-          title: "Id",
-          key: "id"
-        },
-        {
-          title: "Naam",
-          key: "name"
-        }
-      ],
-      pagination: false
-    };
+  name: 'ScoreboardView',
+  setup(){
+    store = useStore();
+  },
+  components:{
+    ScoreboardItem
   },
   mounted() {
+    store.dispatch("fetchScoreboard");
   },
-  computed: {
-    players() {
-      return this.$store.state.players;
+  computed:{
+    ...mapGetters({
+      scoreboard: "getScoreboard"
+    })
+  },
+  data(){
+    return {
+      height: 5
     }
   }
 }

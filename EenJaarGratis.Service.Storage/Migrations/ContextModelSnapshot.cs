@@ -41,14 +41,25 @@ namespace ClassLibrary1EenJaarGratis.Service.Storage.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Answer1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Answer2")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Answer3")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CorrectAnswer")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("PointsToShare")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(100);
-
-                    b.Property<string>("Possibilities")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("QuestionText")
                         .IsRequired()

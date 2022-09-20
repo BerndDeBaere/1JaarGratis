@@ -1,6 +1,8 @@
 import playerGateway from "@/service/gateway/playerGateway";
+import questionGateway from "@/service/gateway/questionGateway";
 
 
 export default {
-    Players: playerGateway
+    Players: playerGateway,
+    Questions: questionGateway
 }

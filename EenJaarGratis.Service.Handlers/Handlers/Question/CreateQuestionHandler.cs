@@ -20,6 +20,6 @@ public class CreateQuestionHandler : IRequestHandler<CreateQuestionRequest, Ques
 
     public async Task<QuestionResponse> Handle(CreateQuestionRequest request, CancellationToken cancellationToken)
     {
-        return _mapper.Map<QuestionResponse>(await _questionRepository.Insert(Service.Storage.Domain.Question.Create(request.Question, request.Possibilities), cancellationToken));
+        return _mapper.Map<QuestionResponse>(await _questionRepository.Insert(Service.Storage.Domain.Question.Create(request.Question, request.Answer1, request.Answer2, request.Answer3, request.CorrectAnswer), cancellationToken));
     }
 }

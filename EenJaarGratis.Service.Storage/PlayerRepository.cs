@@ -36,8 +36,9 @@ public class PlayerRepository : BaseRepository<Player>, IPlayerRepository
             {
                 results.Add(new ScoreBoardPlayer
                 {
-                    Name = reader.GetString(0),
-                    Points = reader.GetInt64(1)
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Points = reader.GetInt64(2)
                 });
             }
         }
@@ -51,14 +52,19 @@ public class PlayerRepository : BaseRepository<Player>, IPlayerRepository
     }
 
     const string ScoreBoardSql = @"
-        select P.Name, SUM(PointsPerGroup.Points) Points from Players P
-        inner join PlayerQuestionGroup PQG on P.Id = PQG.PlayersId
-            inner join (
-            select QG.Id, Q.PointsToShare / count(PQG.PlayersId) as Points from QuestionGroups QG
-        inner join Questions Q on QG.QuestionId = Q.Id
-            inner join PlayerQuestionGroup PQG on QG.Id = PQG.QuestionGroupsId
-            Group by QG.Id
-        ) as PointsPerGroup on PQG.QuestionGroupsId = PointsPerGroup.Id
-            group by PlayersId
+select P.Id, P.Name, IFNULL(SUM(PointsPerGroup.Points),0) Points
+    from Players P
+
+left join PlayerQuestionGroup PQG
+    on P.Id = PQG.PlayersId
+
+left join (
+    select QG.Id, Q.PointsToShare / count(PQG.PlayersId) as Points from QuestionGroups QG
+    inner join Questions Q on QG.QuestionId = Q.Id
+    inner join PlayerQuestionGroup PQG on QG.Id = PQG.QuestionGroupsId
+    Group by QG.Id
+) as PointsPerGroup
+    on PQG.QuestionGroupsId = PointsPerGroup.Id
+group by P.Id
 ";
 }

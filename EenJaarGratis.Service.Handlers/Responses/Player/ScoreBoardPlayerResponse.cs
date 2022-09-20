@@ -2,6 +2,7 @@
 
 public class ScoreBoardPlayerResponse
 {
+    public int Id { get; set; }
     public string Name { get; set; } = null!;
-    public string Points { get; set; } = null!;
+    public int Points { get; set; }
 }
