@@ -4,52 +4,37 @@
     <h1 class="text-center text-xl mt-4" v-if='this.isNew && this.question.question == ""'>Nieuwe vraag</h1>
     <h1 class="text-center text-xl mt-4" v-if='this.question.name !== ""'>{{ question.question }}</h1>
 
-    <form>
-      <div class="form-group">
-        <label for="Name">Vraag</label>
-        <input type="text" class="form-control" placeholder="Vraag invullen" v-model="this.question.question">
-      </div>
-
-      <div class="form-group">
-
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <input type="radio" v-model="question.correctAnswer" value=0>
-            </div>
-          </div>
-          <input type="text" class="form-control" v-model="this.question.answer1">
-        </div>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <input type="radio" v-model="question.correctAnswer" value=1>
-            </div>
-          </div>
-          <input type="text" class="form-control" v-model="this.question.answer2">
-        </div>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <input type="radio" v-model="question.correctAnswer" value=2>
-            </div>
-          </div>
-          <input type="text" class="form-control" v-model="this.question.answer3">
-        </div>
-      </div>
+    <b-form-group>
+      <label for="Name">Vraag</label>
+      <b-form-input placeholder="Vraag invullen" v-model=this.question.question></b-form-input>
+    </b-form-group>
 
 
-      <div class="mb-2 float-right">
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-outline-danger" @click="cancel">
-            <i class="lni lni-cross-circle"></i> Annuleren
-          </button>
-          <button type="button" class="btn btn-outline-secondary" @click="saveQuestion">
-            <i class="lni lni-save"></i> Opslaan
-          </button>
-        </div>
-      </div>
-    </form>
+    <b-form-group>
+      <b-input-group>
+        <b-input-group-prepend>
+          <b-form-radio v-model="question.correctAnswer" value="0"></b-form-radio>
+        </b-input-group-prepend>
+        <b-form-input v-model="question.answer1" placeholder="Antwoord 1"></b-form-input>
+      </b-input-group>
+      <b-input-group>
+        <b-input-group-prepend>
+          <b-form-radio v-model="question.correctAnswer" value="1"></b-form-radio>
+        </b-input-group-prepend>
+        <b-form-input v-model="question.answer2" placeholder="Antwoord 2"></b-form-input>
+      </b-input-group>
+      <b-input-group>
+        <b-input-group-prepend>
+          <b-form-radio v-model="question.correctAnswer" value="2"></b-form-radio>
+        </b-input-group-prepend>
+        <b-form-input v-model="question.answer3" placeholder="Antwoord 3"></b-form-input>
+      </b-input-group>
+    </b-form-group>
+
+    <b-button-group class="float-end">
+      <b-button variant="outline-danger" @click="cancel"><i class="lni lni-cross-circle"></i> Annuleren</b-button>
+      <b-button variant="outline-secondary" @click="saveQuestion"><i class="lni lni-save"></i> Opslaan</b-button>
+    </b-button-group>
   </div>
 </template>
 

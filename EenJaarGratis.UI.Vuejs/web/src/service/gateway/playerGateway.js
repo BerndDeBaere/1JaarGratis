@@ -44,5 +44,15 @@ export default {
             console.error(err.response.data);
             return [];
         }
-    }
+    },
+    async postQuestionGroupsPlayer(questionGroup, player){
+        try{
+            let response = await axios.post(api_root + "/Player/" + player.id + "/QuestionGroup/" + questionGroup.id, {});
+            return response.data;
+        }
+        catch (err){
+            console.error(err);
+            return {}
+        }
+    },
 }

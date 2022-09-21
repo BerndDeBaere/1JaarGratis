@@ -4,41 +4,34 @@
     <h1 class="text-center text-xl mt-4" v-if='this.isNew && this.player.name === ""'>Nieuwe speler</h1>
     <h1 class="text-center text-xl mt-4" v-if='this.player.name !== ""'>{{ player.name }}</h1>
 
-    <form>
-      <div class="form-group">
-        <label for="Name">Naam</label>
-        <input type="text" class="form-control" placeholder="Naam invullen" v-model="this.player.name">
-      </div>
-      <div class="form-group">
-        <label for="Name">Code</label>
-        <input type="text" class="form-control" placeholder="Code scannen" v-model="this.player.code">
-      </div>
+    <b-form-group>
+      <label for="Name">Naam</label>
+      <b-form-input placeholder="Naam invullen" v-model=this.player.name></b-form-input>
+    </b-form-group>
+    <b-form-group>
+      <label for="Name">Code</label>
+      <b-form-input placeholder="Code inscannen" v-model=this.player.code></b-form-input>
+    </b-form-group>
 
-      <div class="mb-2 float-right">
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-outline-danger" @click="cancel">
-            <i class="lni lni-cross-circle"></i> Annuleren
-          </button>
-          <button type="button" class="btn btn-outline-secondary" @click="savePlayer">
-            <i class="lni lni-save"></i> Opslaan
-          </button>
-        </div>
-      </div>
+    <b-button-group>
+      <b-button variant="outline-danger" @click="cancel"><i class="lni lni-cross-circle"></i> Annuleren</b-button>
+      <b-button variant="outline-secondary" @click="savePlayer"><i class="lni lni-save"></i> Opslaan</b-button>
+    </b-button-group>
 
-      <div class="videoContainer">
+    <div class="videoContainer">
       <video id="qrVideo"></video>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <style>
-.videoContainer{
+.videoContainer {
   width: 100%;
   display: flex;
   justify-content: center;
 }
-video{
+
+video {
   height: 50vh;
   max-width: 60vw;
 }
@@ -85,7 +78,7 @@ export default ({
     scanner.stop();
   },
   methods: {
-    cancel(){
+    cancel() {
       router.push({name: 'players'})
     },
     savePlayer() {

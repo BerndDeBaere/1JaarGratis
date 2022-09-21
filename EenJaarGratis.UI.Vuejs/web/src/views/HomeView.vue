@@ -1,7 +1,5 @@
 <template>
-  <router-link :to="{name:'players'}">Spelers</router-link>
-  <router-link :to="{name:'questions'}">Vragen</router-link>
-  <router-link :to="{name:'scoreboard'}">Scorebord</router-link>
+  <div/>
 </template>
 
 <script>

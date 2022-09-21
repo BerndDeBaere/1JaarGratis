@@ -1,63 +1,36 @@
 <template>
   <div class="container">
     <h1 class="text-center text-xl mt-4">Vragen</h1>
-    <div class="mb-2 float-right">
-      <div class="btn-group" role="group" aria-label="Basic example">
-        <button class="btn btn-outline-secondary" @click="newQuestion"><i class="lni lni-circle-plus"></i></button>
-        <button class="btn btn-outline-secondary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" v-if="privacyMode"><i class="lni lni-eye"></i> toon/verberg antwoorden</button>
-<!--        <button class="btn" :class="{'btn-outline-secondary':(!privacyMode), 'btn-secondary':(privacyMode)}" type="button" @click="togglePrivacy">-->
-<!--                 Privacy-->
-<!--        </button>-->
 
-        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Extra opties
-        </button>
-        <div class="dropdown-menu">
-          <button type="button" class="dropdown-item btn" :class="{'active':(privacyMode)}" @click="togglePrivacy"><i class="lni lni-eye"></i> Privacy mode</button>
-          <button type="button" class="dropdown-item btn" @click="uploadExcel">Upload excel</button>
-        </div>
+    <b-button-group class="float-end">
+      <b-button variant="outline-secondary" @click=newQuestion><i class="lni lni-circle-plus"></i> Nieuwe vraag</b-button>
+      <b-dropdown variant="outline-secondary" text="Extra opties">
+        <b-dropdown-item-button @click=uploadExcel>Upload excel</b-dropdown-item-button>
+      </b-dropdown>
+    </b-button-group>
 
-      </div>
-    </div>
-    <br>
-
-    <table class="table">
-      <thead>
-      <tr>
-        <th scope="col">Vraag</th>
-        <th scope="col">Antwoorden</th>
-        <th class="col-2" scope="col">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for='question in questions' :key="question.id">
-        <td>{{ question.question }}</td>
-        <td>
-          <div :class="{show:(!this.privacyMode)}" class="collapse multi-collapse">
-            <ul class="list-group">
-              <li class="list-group-item" :class="{correct: (question.correctAnswer == 0)}">{{ question.answer1 }}</li>
-              <li class="list-group-item" :class="{correct: (question.correctAnswer == 1)}">{{ question.answer2 }}</li>
-              <li class="list-group-item" :class="{correct: (question.correctAnswer == 2)}">{{ question.answer3 }}</li>
-            </ul>
-          </div>
-        </td>
-        <td>
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button class="btn btn-outline-secondary btn-sm" @click="editQuestion(question)"><i
-                class="lni lni-pencil"></i> Bewerken
-            </button>
-            <button class="btn btn-outline-danger btn-sm" @click="deleteQuestion(question)"><i
-                class="lni lni-trash-can"></i></button>
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <b-table striped hover :fields=fields :items=questions>
+      <template #cell(posiblities)="row">
+          <ul>
+            <li :class="{correct: (row.item.correctAnswer == 0)}">{{ row.item.answer1 }}</li>
+            <li :class="{correct: (row.item.correctAnswer == 1)}">{{ row.item.answer2 }}</li>
+            <li :class="{correct: (row.item.correctAnswer == 2)}">{{ row.item.answer3 }}</li>
+          </ul>
+      </template>
+      <template #cell(actions)="row">
+        <b-button-group>
+          <b-button @click="editQuestion(row.item)" variant="outline-secondary"><i class="lni lni-pencil"></i> Bewerken
+          </b-button>
+          <b-button @click="deleteQuestion(row.item)" variant="outline-danger"><i class="lni lni-trash-can"></i>
+          </b-button>
+        </b-button-group>
+      </template>
+    </b-table>
   </div>
 </template>
 
 <style scoped>
-.list-group {
+.list-group-item {
   font-weight: bold;
   color: red;
 }
@@ -79,6 +52,25 @@ export default {
     store = useStore();
     router = useRouter();
   },
+  data() {
+    return {
+      fields: [
+        {
+          key: 'question',
+          label: 'Vraag',
+        },
+        {
+          key: 'posiblities',
+          label: 'Antwoorden'
+        },
+        {
+          key: 'actions',
+          label: 'Actions',
+          class: 'col-2'
+        }
+      ]
+    }
+  },
   computed: {
     ...mapGetters({
       questions: 'getQuestions',
@@ -86,11 +78,8 @@ export default {
     })
   },
   methods: {
-    uploadExcel(){
+    uploadExcel() {
       router.push({name: 'importQuestions'})
-    },
-    togglePrivacy(){
-      store.commit("togglePrivacyMode");
     },
     newQuestion() {
       router.push({name: 'newQuestion'})

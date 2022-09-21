@@ -1,36 +1,22 @@
 <template>
   <div class="container">
     <h1 class="text-center text-xl mt-4">Spelers</h1>
-    <div class="mb-2 float-right">
-      <div class="btn-group" role="group" aria-label="Basic example">
-        <button class="btn btn-outline-secondary" @click="newPlayer"><i class="lni lni-circle-plus"></i></button>
-      </div>
-    </div>
-    <br>
-
-    <table class="table">
-      <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Code</th>
-        <th class="col-2" scope="col">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for='player in players' :key="player.id">
-        <td>{{ player.name }}</td>
-        <td>{{ player.code }}</td>
-        <td>
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button class="btn btn-outline-secondary btn-sm" @click="editPlayer(player)"><i class="lni lni-pencil"></i> Bewerken
-            </button>
-            <button class="btn btn-outline-danger btn-sm" @click="deletePlayer(player)"><i
-                class="lni lni-trash-can"></i></button>
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <b-button-group class="float-end">
+      <b-button variant="outline-secondary" @click=newPlayer><i class="lni lni-circle-plus"></i> Nieuwe speler
+      </b-button>
+    </b-button-group>
+    <b-table striped hover :items=players :fields=fields>
+      <template #cell(actions)="row">
+        <b-button-group>
+          <b-button size="sm" @click="editPlayer(row.item)" variant="outline-secondary">
+            <i class="lni lni-pencil"></i> Bewerken
+          </b-button>
+          <b-button size="sm" @click="deletePlayer(row.item)" variant="outline-danger">
+            <i class="lni lni-trash-can"></i>
+          </b-button>
+        </b-button-group>
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -45,6 +31,25 @@ export default {
   setup() {
     store = useStore();
     router = useRouter();
+  },
+  data() {
+    return {
+      fields: [
+        {
+          key: 'name',
+          label: 'Naam',
+        },
+        {
+          key: 'code',
+          label: 'Code'
+        },
+        {
+          key: 'actions',
+          label: 'Actions',
+          class: 'col-2'
+        }
+      ]
+    }
   },
   computed: {
     ...mapGetters({

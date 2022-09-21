@@ -1,4 +1,5 @@
-﻿using EenJaarGratis.Services.Handlers.Requests.Question;
+﻿using EenJaarGratis.Services.Handlers.Requests.Player;
+using EenJaarGratis.Services.Handlers.Requests.Question;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,6 +72,4 @@ public class QuestionController : Controller
             QuestionGroupId = questionGroupId
         }, cancellationToken));
     }
-    
-   
 }

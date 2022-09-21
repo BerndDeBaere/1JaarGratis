@@ -51,4 +51,15 @@ public class PlayerController : ControllerBase
         _logger.LogInformation("Delete player with id {id}", id);
         return Ok(_mediator.Send(new DeletePlayerRequest {Id = id}, cancellationToken));
     }
+    
+    [HttpPost("{id:int}/QuestionGroup/{questionGroupId:int}")]
+    public async Task<IActionResult> PostQuestionGroupPlayer([FromRoute]int id, [FromRoute]int questionGroupId, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Create Playergroup");
+        return Ok(await _mediator.Send(new CreateQuestionGroupPlayerRequest
+        {
+            PlayerId = id,
+            QuestionGroupId = questionGroupId
+        }, cancellationToken));
+    }
 }

@@ -1,92 +1,117 @@
 <template>
   <div class="container">
     <div class="question-navigation-container mt-1">
-      <button class="btn btn-outline-secondary" @click="previousQuestion">Vorige</button>
-      <button class="btn btn-outline-secondary" @click="nextQuestion">Volgende</button>
+      <b-button @click="previousQuestion" variant="outline-secondary">Vorige</b-button>
+      <b-button @click="nextQuestion" variant="outline-secondary">Volgende</b-button>
     </div>
-    <h1>{{currentQuestion.order+1}}) {{currentQuestion.question}}</h1>
+    <h1>{{ currentQuestion.order + 1 }}) {{ currentQuestion.question }}</h1>
     <ul class="list-group">
-      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 0)}">A) {{ currentQuestion.answer1 }}</li>
-      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 1)}">B) {{ currentQuestion.answer2 }}</li>
-      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 2)}">C) {{ currentQuestion.answer3 }}</li>
+      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 0)}">A)
+        {{ currentQuestion.answer1 }}
+      </li>
+      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 1)}">B)
+        {{ currentQuestion.answer2 }}
+      </li>
+      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 2)}">C)
+        {{ currentQuestion.answer3 }}
+      </li>
     </ul>
 
     <hr>
 
     <div class="group-control-container mb-1">
-      <button class="btn btn-outline-secondary" @click="createQuestionGroup">Nieuwe groep</button>
+      <b-button variant="outline-secondary" @click="createQuestionGroup">Nieuwe groep</b-button>
     </div>
 
-    <div id="accordion">
-      <div class="card mb-1" v-for="(questionGroup, index) in questionGroups" :key="questionGroup.id">
-        <div class="card-header">
-          <h5 class="mb-0 question-navigation-container">
-            <button class="btn btn-light" data-toggle="collapse" v-bind:data-target="'#collapse'+questionGroup.id">
-              Groep {{index+1}}
-            </button>
 
-            <button class="btn btn-outline-secondary" @click="startScanning(questionGroup)">
-              Qr codes scannen
-            </button>
-            <button class="btn btn-outline-danger" @click="deleteQuestionGroup(questionGroup)">
-              Verwijderen
-            </button>
-          </h5>
-        </div>
-        <div v-bind:id="'collapse'+questionGroup.id" class="collapse" data-parent="#accordion">
-          <div class="card-body">
+    <div class="accordion" role="tablist">
+      <b-card no-body v-for="(questionGroup, index) in questionGroups" :key="questionGroup.id">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <div class="question-navigation-container">
+          <b-button block v-b-toggle="'accordion-'+index" variant="light">Groep {{index+1}}</b-button>
+          <b-button-group>
+            <b-button block variant="outline-secondary" @click="startScanning(questionGroup)"><i class="lni lni-search-alt"></i> Scannen</b-button>
+            <b-button block variant="outline-danger" @click="deleteQuestionGroup(questionGroup)"><i class="lni lni-trash-can"></i></b-button>
+          </b-button-group>
+          </div>
+        </b-card-header>
+        <b-collapse :id="'accordion-'+index" accordion="my-accordion" role="tabpanel">
+          <b-card-body>
             <ul>
               <li v-for="player in questionGroup.players" :key=player.id>{{player.name}}</li>
             </ul>
-          </div>
-        </div>
-      </div>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
     </div>
   </div>
+
+
+  <b-modal v-model="scanView" title="Scannen" hide-footer @hidden="stopScanning">
+    <qrcode-stream @decode="onDecode"></qrcode-stream>
+  </b-modal>
+
+
 </template>
 
 <script>
 import {mapGetters, mapMutations} from "vuex";
 import Gateway from "@/service/gateway";
+import { QrcodeStream } from 'vue3-qrcode-reader'
 
 export default {
   name: 'QuizmasterView',
-  computed:{
+  components:{
+    QrcodeStream
+  },
+  computed: {
     ...mapGetters({
-      currentQuestion: "getCurrentQuestion"
+      players: "getPlayers",
+      currentQuestion: "getCurrentQuestion",
     })
   },
-  data(){
+  data() {
     return {
-      questionGroups:[]
+      questionGroups: [],
+      currentQuestionGroup:{},
+      scanView: false
     }
   },
-  methods:{
-    startScanning(questionGroup){
-      alert(questionGroup.id);
+  methods: {
+    async onDecode(decodedString) {
+      if(this.scanView){
+        let player = this.players.find(p => p.code === decodedString);
+        let data = await Gateway.Players.postQuestionGroupsPlayer(this.currentQuestionGroup,player);
+        this.currentQuestionGroup.players.push(data)
+      }
+      },
+    startScanning(questionGroup) {
+      this.scanView = true;
+      this.currentQuestionGroup = questionGroup
     },
-    async loadQuestionGroups(){
+    stopScanning(){
+      console.log("close")
+      this.currentQuestionGroup = null
+    },
+    async loadQuestionGroups() {
       let data = await Gateway.Questions.getQuestionGroups(this.currentQuestion);
       this.questionGroups = data.result;
     },
-    async createQuestionGroup(){
+    async createQuestionGroup() {
       let data = await Gateway.Questions.createQuestionGroups(this.currentQuestion);
       console.log(data);
       this.questionGroups.push(data)
     },
-    async deleteQuestionGroup(questionGroup){
-      if(confirm("Wil je deze groep zeker verwijderen?"))
-      {
-        let data = await Gateway.Questions.deleteQuestionGroups(this.currentQuestion, questionGroup);
-        console.log(data);
-        this.questionGroups = this.questionGroups.filter(x => x.id !== questionGroup.id)
-      }
+    async deleteQuestionGroup(questionGroup) {
+      let data = await Gateway.Questions.deleteQuestionGroups(this.currentQuestion, questionGroup);
+      console.log(data);
+      this.questionGroups = this.questionGroups.filter(x => x.id !== questionGroup.id)
     },
-    async nextQuestion(){
+    async nextQuestion() {
       this.nextQuestionAction();
       await this.loadQuestionGroups();
     },
-    async previousQuestion(){
+    async previousQuestion() {
       this.previousQuestionAction()
       await this.loadQuestionGroups();
     },
@@ -99,21 +124,24 @@ export default {
 
 </script>
 <style scoped>
-h1{
-  text-align:center
+h1 {
+  text-align: center
 }
-.question-navigation-container{
+
+.question-navigation-container {
   display: flex;
   justify-content: space-between;
 }
-.group-control-container{
+
+.group-control-container {
   display: flex;
   justify-content: flex-end;
 }
-.list-group {
+
+.list-group-item {
   font-weight: bold;
-  color: red;
 }
+
 .correct {
   color: green;
 }
