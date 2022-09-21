@@ -13,7 +13,7 @@ public class QuestionGroup:BaseEntity
     public ICollection<Player> Players { get; set; } = new List<Player>();
 
 
-    [NotMapped] public int PointsPerUser => Question.PointsToShare / (Players?.Count ?? 1);
+    [NotMapped] public int PointsPerUser => (Question?.PointsToShare / (Players?.Count == 0? 1: Players?.Count))??0;
 
     public static QuestionGroup Create(Question question, List<Player> players) => new()
     {

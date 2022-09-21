@@ -7,7 +7,9 @@ export default createStore({
       players : [],
       questions : [],
       scoreboard: [],
-      privacyMode: true}
+      currentQuestion: {},
+      privacyMode: true,
+    }
   },
   getters: {
     getPlayers(state){
@@ -21,6 +23,9 @@ export default createStore({
     },
     getScoreboard(state){
       return state.scoreboard.sort((a, b) => b.points - a.points)
+    },
+    getCurrentQuestion(state){
+      return state.currentQuestion;
     }
   },
   mutations: {
@@ -29,18 +34,29 @@ export default createStore({
     },
     setQuestions(state, questions){
       state.questions = questions;
+      state.currentQuestion = questions[0]
     },
     setScoreboard(state, questions){
       state.scoreboard = questions;
     },
+    setCurrentQuestion(state, currentQuestion){
+      state.currentQuestion = currentQuestion;
+    },
     togglePrivacyMode(state){
       state.privacyMode = !state.privacyMode;
+    },
+    incrementCurrentQuestion(state){
+      let max = Math.max.apply(null, state.questions.map(q => q.order));
+      let index = Math.min(state.currentQuestion.order + 1, max);
+      state.currentQuestion = state.questions.find(q => q.order === index);
+    },
+    decrementCurrentQuestion(state){
+      let index = Math.max(state.currentQuestion.order - 1, 0);
+      state.currentQuestion = state.questions.find(q => q.order === index);
     }
   },
 
   actions: {
-
-
     async fetchQuestions({commit}){
       try{
         const data = await gateway.Questions.get();

@@ -24,6 +24,7 @@ public class MapperProfile : Profile
 
         
         CreateMap<QuestionGroup, QuestionGroupResponse>()
-            .ForMember(dest => dest.PointsPerPlayer, options => options.MapFrom(src => src.PointsPerUser));
+            .ForMember(dest => dest.PointsPerPlayer, options => options.MapFrom(src => src.PointsPerUser))
+            .ForMember(dest => dest.Players, options => options.MapFrom(src => src.Players));
     }
 }

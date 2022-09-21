@@ -24,10 +24,8 @@ public class CreateQuestionGroupHandler : IRequestHandler<CreateQuestionGroupReq
     public async Task<QuestionGroupResponse> Handle(CreateQuestionGroupRequest request, CancellationToken cancellationToken)
     {
         Service.Storage.Domain.Question question = await _questionRepository.GetById(request.QuestionId, q => q.QuestionGroups);
-        List<Service.Storage.Domain.Player> players = await _playerRepository.GetByIds(request.PlayerIds);
-
-
-        QuestionGroup questionGroup = QuestionGroup.Create(question, players);
+        
+        QuestionGroup questionGroup = QuestionGroup.Create(question, new List<Service.Storage.Domain.Player>());
         question.QuestionGroups.Add(questionGroup);
 
         await _questionRepository.Update(question, cancellationToken);

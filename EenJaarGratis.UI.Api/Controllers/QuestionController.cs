@@ -44,11 +44,33 @@ public class QuestionController : Controller
         _logger.LogInformation("Delete question with id {id}", id);
         return Ok(_mediator.Send(new DeleteQuestionRequest {Id = id}, cancellationToken));
     }
+    
+    [HttpGet("{id:int}/QuestionGroup")]
+    public IActionResult GetQuestionGroup(int id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Get Playergroup");
+        return Ok(_mediator.Send(new GetQuestionGroupRequest{QuestionId = id}, cancellationToken));
+    }
 
-    [HttpPost("PlayerGroup")]
-    public IActionResult PostQuestionGroup(CreateQuestionGroupRequest request, CancellationToken cancellationToken)
+    [HttpPost("{id:int}/QuestionGroup")]
+    public async Task<IActionResult> PostQuestionGroup([FromRoute]int id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Create Playergroup");
-        return Ok(_mediator.Send(request, cancellationToken));
+        return Ok(await _mediator.Send(new CreateQuestionGroupRequest
+        {
+            QuestionId = id
+        }, cancellationToken));
     }
+    [HttpDelete("{id:int}/QuestionGroup/{questionGroupId:int}")]
+    public async Task<IActionResult> DeleteQuestionGroup(int id, int questionGroupId, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Create Playergroup");
+        return Ok(await _mediator.Send(new DeleteQuestionGroupRequest
+        {
+            QuestionId = id,
+            QuestionGroupId = questionGroupId
+        }, cancellationToken));
+    }
+    
+   
 }

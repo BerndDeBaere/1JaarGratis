@@ -20,6 +20,9 @@ public class GetQuestionHandler : IRequestHandler<GetQuestionRequest, List<Quest
 
     public async Task<List<QuestionResponse>> Handle(GetQuestionRequest request, CancellationToken cancellationToken)
     {
-        return _mapper.Map<List<QuestionResponse>>(await _questionRepository.Get(cancellationToken));
+        List<QuestionResponse>? questions = _mapper.Map<List<QuestionResponse>>(await _questionRepository.Get(cancellationToken));
+        int i = 0;
+        questions?.ForEach(q => q.Order = i++);
+        return questions;
     }
 }

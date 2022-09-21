@@ -19,6 +19,9 @@
         <li class="nav-item">
           <router-link :to="{name:'scoreboard'}" class="nav-link" active-class="active">Scoreboard</router-link>
         </li>
+        <li class="nav-item">
+          <router-link :to="{name:'quizmaster'}" class="nav-link" active-class="active">Quiz</router-link>
+        </li>
       </ul>
     </div>
   </nav>

@@ -7,4 +7,6 @@ public class QuestionResponse
     public string Answer1 { get; set; }= null!;
     public string Answer2 { get; set; }= null!;
     public string Answer3 { get; set; }= null!;
-    public int CorrectAnswer { get; set; }}
+    public int CorrectAnswer { get; set; }
+    public int Order { get; set; }
+}

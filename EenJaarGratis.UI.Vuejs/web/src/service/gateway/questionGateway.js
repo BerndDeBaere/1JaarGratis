@@ -13,7 +13,6 @@ export default {
             return [];
         }
     },
-
     async delete(player){
         try{
             await axios.delete(api_root + "/Question/"+{...player}.id);
@@ -40,5 +39,38 @@ export default {
             console.error(err.response.data);
             return [];
         }
-    }
+    },
+
+    async getQuestionGroups(question){
+        try{
+            let response = await axios.get(api_root + "/Question/" + question.id + "/QuestionGroup");
+            return response.data;
+        }
+        catch (err){
+            console.error(err.response.data);
+            return [];
+        }
+    },
+
+    async createQuestionGroups(question){
+        try{
+            let response = await axios.post(api_root + "/Question/" + question.id + "/QuestionGroup", {});
+            return response.data;
+        }
+        catch (err){
+            console.error(err.response.data);
+            return [];
+        }
+    },
+    async deleteQuestionGroups(question, questionGroup){
+        try{
+            let response = await axios.delete(api_root + "/Question/" + question.id + "/QuestionGroup/" + questionGroup.id);
+            return response.data;
+        }
+        catch (err){
+            console.error(err);
+            return {}
+        }
+    },
+
 }

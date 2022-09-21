@@ -6,6 +6,7 @@ import QuestionsView from "@/views/QuestionsView";
 import PlayerView from "@/views/PlayerView";
 import QuestionView from "@/views/QuestionView";
 import ImportQuestionsView from "@/views/ImportQuestionsView";
+import QuizmasterView from "@/views/QuizmasterView";
 
 
 
@@ -40,6 +41,12 @@ const routes = [
     name: 'importQuestions',
     component: ImportQuestionsView
   },
+  {
+    path: '/Quiz',
+    name: 'quizmaster',
+    component: QuizmasterView
+  },
+
   {
     path: '/',
     name: 'home',
