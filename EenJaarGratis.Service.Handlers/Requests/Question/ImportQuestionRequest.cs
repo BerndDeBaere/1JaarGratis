@@ -3,8 +3,7 @@ using MediatR;
 
 namespace EenJaarGratis.Services.Handlers.Requests.Question;
 
-public class DeleteQuestionGroupRequest : IRequest
+public class ImportQuestionRequest : IRequest
 {
-    public int QuestionId { get; set; }
-    public int QuestionGroupId { get; set; }
+    public string Csv { get; set; }
 }

@@ -1,5 +1,5 @@
 <template>
-<div class="scoreboard-cart" :style="{'height':height+'%', 'font-size':height-3+'vh'}">
+<div class="scoreboard-cart">
   <div>
     {{index}} {{name}}
   </div>
@@ -23,14 +23,9 @@ export default {
 
 
 <style scoped>
-
 .scoreboard-cart{
   display: flex;
   justify-content: space-between;
   align-items:center;
-  border: black solid 1px;
-  padding: 0.75rem;
-  margin:0.25rem;
-  border-radius: 1rem;
 }
 </style>

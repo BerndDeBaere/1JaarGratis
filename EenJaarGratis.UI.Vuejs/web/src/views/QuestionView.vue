@@ -77,11 +77,11 @@ export default {
       else this.updateQuestion();
     },
     createQuestion() {
-      store.dispatch("addQuestion", this.question);
+      store.dispatch("postQuestion", this.question);
       router.push({name: 'questions'});
     },
     updateQuestion() {
-      store.dispatch("updateQuestion", this.question);
+      store.dispatch("putQuestion", this.question);
       router.push({name: 'questions'});
     }
   },

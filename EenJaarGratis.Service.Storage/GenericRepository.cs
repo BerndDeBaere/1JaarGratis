@@ -1,13 +1,14 @@
 ﻿using System.Linq.Expressions;
 using EenJaarGratis.Service.Storage.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EenJaarGratis.Service.Storage;
 
 public interface IBaseRepository<T>
 {
     Task<List<T>> Get(CancellationToken cancellationToken);
-    Task<T> GetById(int id,params Expression<Func<T, object>>[] includes);
+    Task<T> GetById(int id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null);
     Task<T> Insert(T model, CancellationToken cancellationToken);
     Task<T> Update(T model, CancellationToken cancellationToken);
     Task Delete(T model, CancellationToken cancellationToken);
@@ -30,7 +31,19 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         IQueryable<T> query = _entities.AsQueryable();
 
-        includes?.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+        includes.ToList().ForEach(i => query = query.Include(i));
+
+        return query.SingleOrDefaultAsync(x => x.Id == id)!;
+    }
+
+    public Task<T> GetById(int id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+    {
+        IQueryable<T> query = _entities.AsQueryable();
+
+        if (includes != null)
+        {
+            query = includes(query);
+        }
 
         return query.SingleOrDefaultAsync(x => x.Id == id)!;
     }

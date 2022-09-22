@@ -5,6 +5,7 @@ using EenJaarGratis.Service.Storage.Domain;
 using EenJaarGratis.Services.Handlers.Requests.Question;
 using EenJaarGratis.Services.Handlers.Responses.Question;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace EenJaarGratis.Services.Handlers.Handlers.Question;
 
@@ -23,7 +24,7 @@ public class CreateQuestionGroupHandler : IRequestHandler<CreateQuestionGroupReq
 
     public async Task<QuestionGroupResponse> Handle(CreateQuestionGroupRequest request, CancellationToken cancellationToken)
     {
-        Service.Storage.Domain.Question question = await _questionRepository.GetById(request.QuestionId, q => q.QuestionGroups);
+        Service.Storage.Domain.Question question = await _questionRepository.GetById(request.QuestionId, query => query.Include(q => q.QuestionGroups));
         
         QuestionGroup questionGroup = QuestionGroup.Create(question, new List<Service.Storage.Domain.Player>());
         question.QuestionGroups.Add(questionGroup);

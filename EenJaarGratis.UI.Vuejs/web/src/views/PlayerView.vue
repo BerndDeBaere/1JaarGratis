@@ -19,7 +19,7 @@
     </b-button-group>
 
     <div class="videoContainer">
-      <video id="qrVideo"></video>
+      <qrcode-stream @decode="onDecode"></qrcode-stream>
     </div>
   </div>
 </template>
@@ -40,11 +40,10 @@ video {
 <script>
 import {useRoute, useRouter} from 'vue-router'
 import {mapGetters, useStore} from 'vuex'
-import QrScanner from "qr-scanner"
+import { QrcodeStream } from 'vue3-qrcode-reader'
 
 let store;
 let router;
-let scanner;
 export default ({
   name: "PlayerView",
   mounted() {
@@ -60,37 +59,32 @@ export default ({
       this.player.name = ""
       this.player.code = ""
     }
-
-    scanner = new QrScanner(
-        document.getElementById("qrVideo"),
-        result => {
-          this.player.code = result;
-        }
-    );
-    scanner.start();
   },
   computed: {
     ...mapGetters({
       players: 'getPlayers'
     })
   },
-  unmounted() {
-    scanner.stop();
+  components:{
+    QrcodeStream
   },
   methods: {
     cancel() {
       router.push({name: 'players'})
+    },
+    onDecode(decodedString){
+      this.player.code = decodedString
     },
     savePlayer() {
       if (this.isNew) this.createPlayer();
       else this.updatePlayer();
     },
     createPlayer() {
-      store.dispatch("addPlayer", this.player);
+      store.dispatch("postPlayer", this.player);
       router.push({name: 'players'});
     },
     updatePlayer() {
-      store.dispatch("updatePlayer", this.player);
+      store.dispatch("putPlayer", this.player);
       router.push({name: 'players'});
     }
   },

@@ -1,8 +1,11 @@
 using EenJaarGratis.Services.Handlers;
+using EenJaarGratis.UI.Api;
+using EenJaarGratis.UI.Api.Controllers;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,6 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapHub<SignalRHub>("/signalr");
+
 app.UseCors(options =>
 {
     options
@@ -25,6 +30,9 @@ app.UseCors(options =>
         .AllowAnyMethod()
         .SetIsOriginAllowed(_ => true);
 });
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
 
 app.UseAuthorization();
 

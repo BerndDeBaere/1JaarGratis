@@ -6,7 +6,7 @@ using MediatR;
 
 namespace EenJaarGratis.Services.Handlers.Handlers.Question;
 
-public class DeleteQuestionHandler : IRequestHandler<DeleteQuestionRequest, bool>
+public class DeleteQuestionHandler : IRequestHandler<DeleteQuestionRequest>
 {
     private readonly IQuestionRepository _questionRepository;
 
@@ -15,15 +15,14 @@ public class DeleteQuestionHandler : IRequestHandler<DeleteQuestionRequest, bool
         _questionRepository = questionRepository;
     }
 
-    public async Task<bool> Handle(DeleteQuestionRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteQuestionRequest request, CancellationToken cancellationToken)
     {
         Service.Storage.Domain.Question? question = await _questionRepository.GetById(request.Id);
-        if (question is null)
+        if(question is null)
         {
-            return false;
+            throw new KeyNotFoundException($"Vraag met id {request.Id} niet gevonden");
         }
-
         await _questionRepository.Delete(question, cancellationToken);
-        return true;
+        return Unit.Value;
     }
 }

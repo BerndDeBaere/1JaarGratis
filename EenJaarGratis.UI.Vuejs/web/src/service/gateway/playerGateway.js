@@ -1,58 +1,50 @@
 import axios from 'axios';
+import {GatewayResponse} from "@/service/gateway/GatewayResponse";
 
 const api_root = process.env.VUE_APP_TITLE;
 export default {
     async get() {
-
         try {
-            let response = await axios.get(api_root + "/Player");
-            return response.data;
+            const response = await axios.get(api_root + "/Player");
+            return new GatewayResponse(true, response.data)
         } catch (err) {
-            console.error(err.response.data);
-            return [];
+            return new GatewayResponse(false, err)
         }
-    },
-    async delete(player) {
+    }, async delete(player) {
         try {
-            await axios.delete(api_root + "/Player/" + {...player}.id);
+            const response = await axios.delete(api_root + "/Player/" + {...player}.id);
+            return new GatewayResponse(true, response.data)
         } catch (err) {
-            console.error(err.response.data);
-            return [];
+            return new GatewayResponse(false, err)
         }
-    },
-    async post(player) {
+    }, async post(player) {
         try {
-            await axios.post(api_root + "/Player", player);
+            const response = await axios.post(api_root + "/Player", player);
+            return new GatewayResponse(true, response.data)
         } catch (err) {
-            console.error(err.response.data);
-            return [];
+            return new GatewayResponse(false, err)
         }
-    },
-    async put(player) {
+    }, async put(player) {
         try {
-            await axios.put(api_root + "/Player", player);
+            const response = await axios.put(api_root + "/Player", player);
+            return new GatewayResponse(true, response.data)
         } catch (err) {
-            console.error(err.response.data);
-            return [];
+            return new GatewayResponse(false, err)
         }
-    },
-    async getScoreboard(){
+    }, async getScoreboard(){
         try {
-            let response = await axios.get(api_root + "/Player/Scoreboard");
-            return response.data;
+            const response = await axios.get(api_root + "/Player/Scoreboard");
+            return new GatewayResponse(true, response.data)
         } catch (err) {
-            console.error(err.response.data);
-            return [];
+            return new GatewayResponse(false, err)
         }
-    },
-    async postQuestionGroupsPlayer(questionGroup, player){
+    }, async postQuestionGroupsPlayer(questionGroup, player){
         try{
-            let response = await axios.post(api_root + "/Player/" + player.id + "/QuestionGroup/" + questionGroup.id, {});
-            return response.data;
+            const response = await axios.post(api_root + "/Player/" + player.id + "/QuestionGroup/" + questionGroup.id, {});
+            return new GatewayResponse(true, response.data)
         }
         catch (err){
-            console.error(err);
-            return {}
+            return new GatewayResponse(false, err)
         }
-    },
+    }
 }

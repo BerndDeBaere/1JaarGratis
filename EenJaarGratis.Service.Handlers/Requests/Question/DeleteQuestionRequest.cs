@@ -2,7 +2,7 @@
 
 namespace EenJaarGratis.Services.Handlers.Requests.Question;
 
-public class DeleteQuestionRequest : IRequest<bool>
+public class DeleteQuestionRequest : IRequest
 {
     public int Id { get; set; }
 }

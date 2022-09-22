@@ -19,38 +19,38 @@ public class QuestionController : Controller
     }
 
     [HttpGet]
-    public IActionResult Get(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Get all questions");
-        return Ok(_mediator.Send(new GetQuestionRequest(), cancellationToken));
+        return Ok(await _mediator.Send(new GetQuestionRequest(), cancellationToken));
     }
 
     [HttpPost]
-    public IActionResult Post(CreateQuestionRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(CreateQuestionRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Create question");
-        return Ok(_mediator.Send(request, cancellationToken));
+        return Ok(await _mediator.Send(request, cancellationToken));
     }
 
     [HttpPut]
-    public IActionResult Put(UpdateQuestionRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Put(UpdateQuestionRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Update question");
-        return Ok(_mediator.Send(request, cancellationToken));
+        return Ok(await _mediator.Send(request, cancellationToken));
     }
 
     [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Delete question with id {id}", id);
-        return Ok(_mediator.Send(new DeleteQuestionRequest {Id = id}, cancellationToken));
+        return Ok(await _mediator.Send(new DeleteQuestionRequest {Id = id}, cancellationToken));
     }
     
     [HttpGet("{id:int}/QuestionGroup")]
-    public IActionResult GetQuestionGroup(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetQuestionGroup(int id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Get Playergroup");
-        return Ok(_mediator.Send(new GetQuestionGroupRequest{QuestionId = id}, cancellationToken));
+        return Ok(await _mediator.Send(new GetQuestionGroupRequest{QuestionId = id}, cancellationToken));
     }
 
     [HttpPost("{id:int}/QuestionGroup")]
@@ -71,5 +71,12 @@ public class QuestionController : Controller
             QuestionId = id,
             QuestionGroupId = questionGroupId
         }, cancellationToken));
+    }
+    
+    
+    [HttpPost("Import")]
+    public async Task<IActionResult> ImportQuestionGroup(ImportQuestionRequest request, CancellationToken cancellationToken)
+    {
+        return Ok(await _mediator.Send(request));
     }
 }
