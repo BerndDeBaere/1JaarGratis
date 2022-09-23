@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <h1 class="text-center text-xl mt-4" v-if='this.isNew && this.question.question == ""'>Nieuwe vraag</h1>
+    <h1 class="text-center text-xl mt-4" v-if='this.isNew && this.question.question === ""'>Nieuwe vraag</h1>
     <h1 class="text-center text-xl mt-4" v-if='this.question.name !== ""'>{{ question.question }}</h1>
 
     <b-form-group>
@@ -40,14 +40,12 @@
 
 <script>
 import {useRoute, useRouter} from 'vue-router'
-import {mapGetters, useStore} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 let router;
-let store;
 export default {
   name: 'QuestionView',
   mounted() {
-    store = useStore();
     router = useRouter();
     const route = useRoute();
     const id = route.params.id;
@@ -69,20 +67,27 @@ export default {
     })
   },
   methods: {
+    ...mapActions({
+      postQuestion:"postQuestion",
+      putQuestion: "putQuestion"
+    }),
     cancel() {
       router.push({name: 'questions'})
     },
-    saveQuestion() {
-      if (this.isNew) this.createQuestion();
-      else this.updateQuestion();
+    async saveQuestion() {
+      if (this.isNew) await this.createQuestion();
+      else await this.updateQuestion();
     },
-    createQuestion() {
-      store.dispatch("postQuestion", this.question);
+    async createQuestion() {
+      const response = await this.postQuestion(this.question);
+      if(response.isSuccess){
+        router.push({name: 'questions'});
+      }    },
+    async updateQuestion() {
+      const response = await this.putQuestion(this.question);
+      if(response.isSuccess){
       router.push({name: 'questions'});
-    },
-    updateQuestion() {
-      store.dispatch("putQuestion", this.question);
-      router.push({name: 'questions'});
+      }
     }
   },
   data() {

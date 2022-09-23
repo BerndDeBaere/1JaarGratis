@@ -46,5 +46,13 @@ export default {
         catch (err){
             return new GatewayResponse(false, err)
         }
+    }, async deleteQuestionGroupsPlayer(questionGroup, player){
+        try{
+            const response = await axios.delete(api_root + "/Player/" + player.id + "/QuestionGroup/" + questionGroup.id, {});
+            return new GatewayResponse(true, response.data)
+        }
+        catch (err){
+            return new GatewayResponse(false, err)
+        }
     }
 }

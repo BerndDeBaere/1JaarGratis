@@ -12,7 +12,6 @@ export class GatewayResponse {
         }
         else {
             this.data = data.response.data.message
-
             console.log(data.config.method + " : " + data.config.url + "\n" + this.data)
             console.log(data.response.data)
 

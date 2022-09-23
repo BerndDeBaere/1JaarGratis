@@ -1,5 +1,9 @@
 <template>
-  <div/>
+  <b-container>
+    <img :src="'https://api.qrserver.com/v1/create-qr-code/?data=' + url" alt="qrCode">
+    <br>
+    {{url}}
+  </b-container>
 </template>
 
 <script>
@@ -7,17 +11,7 @@ export default {
   name: 'PlayersView',
   setup() {
     return {
-      columns: [
-        {
-          title: "Id",
-          key: "id"
-        },
-        {
-          title: "Naam",
-          key: "name"
-        }
-      ],
-      pagination: false
+      url: window.location
     };
   },
   mounted() {

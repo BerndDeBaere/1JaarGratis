@@ -5,59 +5,57 @@
       <b-button @click="reloadScoreboard" variant="outline-secondary">Scorebord</b-button>
       <b-button @click="nextQuestion" variant="outline-secondary">Volgende</b-button>
     </div>
-    <h1>{{ currentQuestion.order + 1 }}) {{ currentQuestion.question }}</h1>
-    <ul class="list-group">
-      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 0)}">A)
-        {{ currentQuestion.answer1 }}
+    <h1 v-if="question === undefined">Klik op vorige!</h1>
+    <h1 v-if="question !== undefined">{{ question?.order + 1 }}) {{ question?.question }}</h1>
+    <ul v-if="question !== undefined" class="list-group">
+      <li class="list-group-item" :class="{correct: (question?.correctAnswer === 0)}">A)
+        {{ question?.answer1 }}
       </li>
-      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 1)}">B)
-        {{ currentQuestion.answer2 }}
+      <li class="list-group-item" :class="{correct: (question?.correctAnswer === 1)}">B)
+        {{ question?.answer2 }}
       </li>
-      <li class="list-group-item" :class="{correct: (currentQuestion.correctAnswer === 2)}">C)
-        {{ currentQuestion.answer3 }}
+      <li class="list-group-item" :class="{correct: (question?.correctAnswer === 2)}">C)
+        {{ question?.answer3 }}
       </li>
     </ul>
 
-    <hr>
+    <hr v-if="question !== undefined">
 
-    <div class="group-control-container mb-1">
+    <div v-if="question !== undefined" class="group-control-container mb-1">
       <b-button variant="outline-secondary" @click="createQuestionGroup">Nieuwe groep</b-button>
     </div>
 
+    <b-accordion>
+      <b-accordion-item :visible="questionGroup === this.currentQuestionGroup" :title="'Groep ' + (index+1)" v-for="(questionGroup, index) in questionGroups" :key="questionGroup.id">
+        <b-button-group>
+          <b-button block variant="outline-secondary" @click="startScanning(questionGroup)"><i
+              class="lni lni-search-alt"></i> Scannen
+          </b-button>
+          <b-button block variant="outline-danger" @click="deleteQuestionGroup(questionGroup)"><i
+              class="lni lni-trash-can"></i></b-button>
+        </b-button-group>
+        <b-table :items="questionGroup.players" :fields="[{key:'name', label:'Naam'}, {key:'actions', label:''}]">
+          <template #cell(actions)="row">
+            <b-button @click="removePlayerFromGroup(questionGroup, row.item)" variant="outline-danger"><i class="lni lni-trash-can"></i></b-button>
+          </template>
+        </b-table>
+      </b-accordion-item>
+    </b-accordion>
 
-    <div class="accordion" role="tablist">
-      <b-card no-body v-for="(questionGroup, index) in questionGroups" :key="questionGroup.id">
-        <b-card-header header-tag="header" class="p-1" role="tab">
-          <div class="question-navigation-container">
-            <b-button block v-b-toggle="'accordion-'+index" variant="light">Groep {{ index + 1 }}</b-button>
-            <b-button-group>
-              <b-button block variant="outline-secondary" @click="startScanning(questionGroup)"><i
-                  class="lni lni-search-alt"></i> Scannen
-              </b-button>
-              <b-button block variant="outline-danger" @click="deleteQuestionGroup(questionGroup)"><i
-                  class="lni lni-trash-can"></i></b-button>
-            </b-button-group>
-          </div>
-        </b-card-header>
-        <b-collapse :id="'accordion-'+index" accordion="my-accordion" role="tabpanel">
-          <b-card-body>
-            <ul>
-              <li v-for="player in questionGroup.players" :key=player.id>{{ player.name }}</li>
-            </ul>
-          </b-card-body>
-        </b-collapse>
-      </b-card>
-    </div>
   </b-container>
 
   <b-modal v-model="scanView" title="Scannen" hide-footer @hidden="stopScanning">
     <b-container :toast="{root: true}">
       <b-button-group class="mb-1">
-        <b-button variant="outline-secondary" @click=toggleTorch><i class="lni lni-bulb"></i></b-button>
         <b-button variant="outline-secondary" @click=rescan><i class="lni lni-reload"></i></b-button>
       </b-button-group>
       <qrcode-stream :torch=this.torch :camera=camera @decode="onDecode">
       </qrcode-stream>
+      <b-table :items="this.currentQuestionGroup.players" :fields="[{key:'name', label:'Naam'}, {key:'actions', label:''}]">
+        <template #cell(actions)="row">
+          <b-button @click="removePlayerFromGroup(this.currentQuestionGroup, row.item)" variant="outline-danger"><i class="lni lni-trash-can"></i></b-button>
+        </template>
+      </b-table>
     </b-container>
   </b-modal>
 
@@ -68,26 +66,20 @@
 import {mapGetters, mapMutations} from "vuex";
 import Gateway from "@/service/gateway";
 import {QrcodeStream} from 'vue3-qrcode-reader'
-import {useToast} from "bootstrap-vue-3";
 
-let toast;
 export default {
   name: 'QuizmasterView',
   components: {
     QrcodeStream
   },
-  setup() {
-    toast = useToast();
-  },
-  computed: {
-    ...mapGetters({
-      signalR: "getSignalR",
-      players: "getPlayers",
-      currentQuestion: "getCurrentQuestion",
-    })
+  async mounted() {
+    this.loadQuestion();
+    await this.loadQuestionGroups();
+
   },
   data() {
     return {
+      question: {},
       questionGroups: [],
       currentQuestionGroup: {},
       scanView: false,
@@ -95,23 +87,51 @@ export default {
       camera: 'off'
     }
   },
+  computed: {
+    ...mapGetters({
+      signalR: "getSignalR",
+      toast:  "getToast",
+      players: "getPlayers",
+      questions: "getQuestions",
+      questionIndex: "getCurrentQuestionIndex"
+    })
+  },
   methods: {
-    async reloadScoreboard(){
+    ...mapMutations({
+      nextQuestionIndex: "incrementCurrentQuestion",
+      previousQuestionIndex: "decrementCurrentQuestion"
+    }),
+
+    async previousQuestion() {
+      this.previousQuestionIndex()
+      this.loadQuestion();
+      await this.loadQuestionGroups();
+    },
+    async reloadScoreboard() {
       this.signalR.invoke("ReloadScoreboard")
     },
-    toggleTorch(){
-      this.torch = !this.torch
+    async nextQuestion() {
+      this.nextQuestionIndex();
+      this.loadQuestion();
+      await this.loadQuestionGroups();
     },
-    async rescan(){
+
+    async rescan() {
       this.camera = "off";
+      await this.sleep(500);
       this.camera = "auto";
+    },
+    async sleep(ms) {
+      return new Promise(resolve => {
+        window.setTimeout(resolve, ms)
+      })
     },
     async onDecode(decodedString) {
       if (this.scanView) {
         const player = this.players.find(p => p.code === decodedString);
         const response = await Gateway.Players.postQuestionGroupsPlayer(this.currentQuestionGroup, player);
         if (response.isSuccess) {
-          toast.show({
+          this.toast.show({
             title: 'Gebruiker gescand',
             body: response.data.name,
 
@@ -119,9 +139,9 @@ export default {
             delay: 1000,
             pos: 'bottom-center',
           });
-          this.currentQuestionGroup.players.push(response.data)
+          this.currentQuestionGroup.players.unshift(response.data)
         } else {
-          toast.show({
+          this.toast.show({
             title: 'Let op!',
             body: response.data,
           }, {
@@ -132,6 +152,14 @@ export default {
         }
       }
     },
+    async removePlayerFromGroup(group, player){
+      const response = await Gateway.Players.deleteQuestionGroupsPlayer(group, player);
+      if (response.isSuccess) {
+        const index = group.players.indexOf(player);
+        group.players.splice(index,1)
+
+      }
+    },
     startScanning(questionGroup) {
       this.scanView = true;
       this.currentQuestionGroup = questionGroup
@@ -140,35 +168,28 @@ export default {
     stopScanning() {
       this.camera = 'off'
     },
+
+    loadQuestion() {
+      this.question = this.questions[this.questionIndex]
+    },
     async loadQuestionGroups() {
-      const result = await Gateway.Questions.getQuestionGroups(this.currentQuestion);
+      const result = await Gateway.Questions.getQuestionGroups(this.question);
       if (result.isSuccess) {
         this.questionGroups = result.data;
       }
     },
     async createQuestionGroup() {
-      const response = await Gateway.Questions.createQuestionGroups(this.currentQuestion);
+      const response = await Gateway.Questions.createQuestionGroups(this.question);
       if (response.isSuccess) {
         this.questionGroups.push(response.data)
+        this.startScanning(response.data);
       }
     },
     async deleteQuestionGroup(questionGroup) {
-      let data = await Gateway.Questions.deleteQuestionGroups(this.currentQuestion, questionGroup);
+      let data = await Gateway.Questions.deleteQuestionGroups(this.question, questionGroup);
       console.log(data);
       this.questionGroups = this.questionGroups.filter(x => x.id !== questionGroup.id)
-    },
-    async nextQuestion() {
-      this.nextQuestionAction();
-      await this.loadQuestionGroups();
-    },
-    async previousQuestion() {
-      this.previousQuestionAction()
-      await this.loadQuestionGroups();
-    },
-    ...mapMutations({
-      nextQuestionAction: "incrementCurrentQuestion",
-      previousQuestionAction: "decrementCurrentQuestion"
-    })
+    }
   }
 }
 

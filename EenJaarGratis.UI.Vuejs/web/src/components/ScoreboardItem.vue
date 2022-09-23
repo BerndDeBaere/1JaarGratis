@@ -1,18 +1,20 @@
 <template>
-<div class="scoreboard-cart">
-  <div>
-    {{index}} {{name}}
+  <div class="scoreboard-cart-outer">
+    <div class="scoreboard-cart-inner">
+      <div>
+        {{ index }}) {{ name }}
+      </div>
+      <div>
+        {{ points }}
+      </div>
+    </div>
   </div>
-  <div >
-    {{points}}
-  </div>
-</div>
 </template>
 
 <script>
 export default {
   name: "ScoreboardItem",
-  props:{
+  props: {
     name: String,
     height: Number,
     points: Number,
@@ -23,9 +25,24 @@ export default {
 
 
 <style scoped>
-.scoreboard-cart{
+.scoreboard-cart-outer {
   display: flex;
+  align-items: center;
+  padding: 0.75rem;
+}
+
+.scoreboard-cart-inner {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items:center;
+
+  font-size: 2rem;
+
+  background-color: #631F1B20;
+  color: white;
+  border-radius: 1rem;
+  padding:1rem;
+  height: 100%;
+  width: 100%;
 }
 </style>

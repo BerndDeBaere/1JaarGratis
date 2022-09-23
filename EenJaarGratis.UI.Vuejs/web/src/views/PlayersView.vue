@@ -11,7 +11,7 @@
           <b-button size="sm" @click="editPlayer(row.item)" variant="outline-secondary">
             <i class="lni lni-pencil"></i> Bewerken
           </b-button>
-          <b-button size="sm" @click="deletePlayer(row.item)" variant="outline-danger">
+          <b-button size="sm" @click="removePlayer(row.item)" variant="outline-danger">
             <i class="lni lni-trash-can"></i>
           </b-button>
         </b-button-group>
@@ -22,14 +22,12 @@
 
 <script>
 import {useRouter} from 'vue-router'
-import {mapGetters, useStore} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 let router;
-let store;
 export default {
   name: 'PlayersView',
   setup() {
-    store = useStore();
     router = useRouter();
   },
   data() {
@@ -57,11 +55,14 @@ export default {
     })
   },
   methods: {
+    ...mapActions({
+      deletePlayer: "deletePlayer"
+    }),
     newPlayer() {
       router.push({name: 'newPlayer'})
     },
-    deletePlayer(player) {
-      store.dispatch("deletePlayer", player)
+    async removePlayer(player) {
+      await this.deletePlayer(player)
     },
     editPlayer(player) {
       router.push({name: 'editPlayer', params: {id: player.id}})

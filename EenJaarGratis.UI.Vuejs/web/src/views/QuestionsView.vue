@@ -12,16 +12,16 @@
     <b-table striped hover :fields=fields :items=questions>
       <template #cell(posiblities)="row">
           <ul>
-            <li :class="{correct: (row.item.correctAnswer == 0)}">{{ row.item.answer1 }}</li>
-            <li :class="{correct: (row.item.correctAnswer == 1)}">{{ row.item.answer2 }}</li>
-            <li :class="{correct: (row.item.correctAnswer == 2)}">{{ row.item.answer3 }}</li>
+            <li :class="{correct: (row.item.correctAnswer === 0)}">{{ row.item.answer1 }}</li>
+            <li :class="{correct: (row.item.correctAnswer === 1)}">{{ row.item.answer2 }}</li>
+            <li :class="{correct: (row.item.correctAnswer === 2)}">{{ row.item.answer3 }}</li>
           </ul>
       </template>
       <template #cell(actions)="row">
         <b-button-group>
           <b-button @click="editQuestion(row.item)" variant="outline-secondary"><i class="lni lni-pencil"></i> Bewerken
           </b-button>
-          <b-button @click="deleteQuestion(row.item)" variant="outline-danger"><i class="lni lni-trash-can"></i>
+          <b-button @click="removeQuestion(row.item)" variant="outline-danger"><i class="lni lni-trash-can"></i>
           </b-button>
         </b-button-group>
       </template>
@@ -30,26 +30,19 @@
 </template>
 
 <style scoped>
-.list-group-item {
-  font-weight: bold;
-  color: red;
-}
-
 .correct {
   color: green;
 }
 </style>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import {useRouter} from "vue-router";
 
-let store;
 let router;
 export default {
   name: 'QuestionsView',
   setup() {
-    store = useStore();
     router = useRouter();
   },
   data() {
@@ -74,18 +67,20 @@ export default {
   computed: {
     ...mapGetters({
       questions: 'getQuestions',
-      privacyMode: 'getPrivacyMode'
     })
   },
   methods: {
+    ...mapActions({
+      deleteQuestion: "deleteQuestion"
+    }),
     uploadExcel() {
       router.push({name: 'importQuestions'})
     },
     newQuestion() {
       router.push({name: 'newQuestion'})
     },
-    deleteQuestion(player) {
-      store.dispatch("deleteQuestion", player)
+    removeQuestion(player) {
+      this.deleteQuestion(player)
     },
     editQuestion(player) {
       router.push({name: 'editQuestion', params: {id: player.id}})

@@ -8,6 +8,7 @@
 import NavigationBar from "@/components/NavigationBar";
 import {useSignalR} from "@dreamonkey/vue-signalr";
 import {mapGetters} from "vuex";
+import {useToast} from "bootstrap-vue-3";
 
 export default {
   components: {
@@ -17,8 +18,9 @@ export default {
     this.$store.dispatch("getPlayers")
     this.$store.dispatch("getQuestions")
     this.$store.commit("setSignalR", useSignalR())
+    this.$store.commit("setToast", useToast())
 
-    this.signalR.on("UpdatePlayers", () => {
+    this.signalR.on("ReloadPlayers", () => {
       this.$store.dispatch("getPlayers")
     })
 

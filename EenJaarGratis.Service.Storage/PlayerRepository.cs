@@ -8,6 +8,7 @@ public interface IPlayerRepository : IBaseRepository<Player>
 {
     Task<List<Player>> GetByIds(List<int> playerIds);
     Task<List<ScoreBoardPlayer>> GetScoreboard();
+    Task<Player> GetByCode(string requestCode);
 }
 
 public class PlayerRepository : BaseRepository<Player>, IPlayerRepository
@@ -49,6 +50,11 @@ public class PlayerRepository : BaseRepository<Player>, IPlayerRepository
 
 
         return results;
+    }
+
+    public Task<Player> GetByCode(string requestCode)
+    {
+        return _context.Players.FirstOrDefaultAsync(p => p.Code == requestCode);
     }
 
     const string ScoreBoardSql = @"

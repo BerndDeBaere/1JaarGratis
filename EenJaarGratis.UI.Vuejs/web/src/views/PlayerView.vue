@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <b-container :toast="{root: true}">
 
     <h1 class="text-center text-xl mt-4" v-if='this.isNew && this.player.name === ""'>Nieuwe speler</h1>
     <h1 class="text-center text-xl mt-4" v-if='this.player.name !== ""'>{{ player.name }}</h1>
@@ -13,7 +13,7 @@
       <b-form-input placeholder="Code inscannen" v-model=this.player.code></b-form-input>
     </b-form-group>
 
-    <b-button-group>
+    <b-button-group class="float-end">
       <b-button variant="outline-danger" @click="cancel"><i class="lni lni-cross-circle"></i> Annuleren</b-button>
       <b-button variant="outline-secondary" @click="savePlayer"><i class="lni lni-save"></i> Opslaan</b-button>
     </b-button-group>
@@ -21,7 +21,7 @@
     <div class="videoContainer">
       <qrcode-stream @decode="onDecode"></qrcode-stream>
     </div>
-  </div>
+  </b-container>
 </template>
 
 <style>
@@ -39,15 +39,13 @@ video {
 
 <script>
 import {useRoute, useRouter} from 'vue-router'
-import {mapGetters, useStore} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 import { QrcodeStream } from 'vue3-qrcode-reader'
 
-let store;
 let router;
 export default ({
   name: "PlayerView",
   mounted() {
-    store = useStore();
     router = useRouter();
     const route = useRoute();
     const id = route.params.id;
@@ -62,13 +60,18 @@ export default ({
   },
   computed: {
     ...mapGetters({
-      players: 'getPlayers'
+      players: 'getPlayers',
+      toast: "getToast"
     })
   },
   components:{
     QrcodeStream
   },
   methods: {
+    ...mapActions({
+      postPlayer: "postPlayer",
+      putPlayer: "putPlayer"
+    }),
     cancel() {
       router.push({name: 'players'})
     },
@@ -79,13 +82,33 @@ export default ({
       if (this.isNew) this.createPlayer();
       else this.updatePlayer();
     },
-    createPlayer() {
-      store.dispatch("postPlayer", this.player);
-      router.push({name: 'players'});
+    async createPlayer() {
+      const response = await this.postPlayer(this.player);
+      if(response.isSuccess) {
+        router.push({name: 'players'});
+      }
+      else{
+        this.showToast(response.data)
+      }
     },
-    updatePlayer() {
-      store.dispatch("putPlayer", this.player);
-      router.push({name: 'players'});
+    async updatePlayer() {
+      const response = await this.putPlayer(this.player);
+      if(response.isSuccess) {
+        router.push({name: 'players'});
+      }
+      else{
+        this.showToast(response.data)
+      }
+    },
+    showToast(message){
+      this.toast.show({
+        title: 'Let op!',
+        body: message,
+      }, {
+        variant: 'warning',
+        delay: 5000,
+        pos: 'bottom-center',
+      });
     }
   },
   data() {

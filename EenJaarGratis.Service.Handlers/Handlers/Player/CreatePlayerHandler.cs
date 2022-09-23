@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EenJaarGratis.Common;
 using EenJaarGratis.Service.Storage;
 using EenJaarGratis.Services.Handlers.Requests.Player;
 using EenJaarGratis.Services.Handlers.Responses.Player;
@@ -19,6 +20,9 @@ public class CreatePlayerHandler : IRequestHandler<CreatePlayerRequest, PlayerRe
 
     public async Task<PlayerResponse> Handle(CreatePlayerRequest request, CancellationToken cancellationToken)
     {
+        var existingPlayer = await _playerRepository.GetByCode(request.Code);
+        if (existingPlayer != null)
+            throw new AppException("Code al in gebruik");
         return _mapper.Map<PlayerResponse>(await _playerRepository.Insert(Service.Storage.Domain.Player.Create(request.Name, request.Code), cancellationToken));
     }
 }

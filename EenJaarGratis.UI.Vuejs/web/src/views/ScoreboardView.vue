@@ -2,8 +2,11 @@
   <div class="fullPage ">
     <div class="row mx-0 fullHeight">
       <div class="col fullHeight" v-for="(column, columnIndex) in this.scoreboard" :key=columnIndex>
-        <div class="row" :style="{'height': (100/this.maxInColumn)+'%'}" v-for="(player, playerIndex) in column" :key=playerIndex>
-          <ScoreboardItem :name=player.name :points=player.points :index=(playerIndex+1+columnIndex*this.maxInColumn)></ScoreboardItem>
+        <div class="row" :style="{'height': (100/this.maxInColumn)+'%'}" v-for="(player, playerIndex) in column"
+             :key=playerIndex>
+
+          <ScoreboardItem :name=player.name :points=player.points
+                          :index=(playerIndex+1+columnIndex*this.maxInColumn)></ScoreboardItem>
         </div>
       </div>
     </div>
@@ -13,19 +16,22 @@
 </template>
 
 <style>
-.fullHeight{
+.fullHeight {
   height: 100%;
 }
-.fullPage{
 
-background : radial-gradient(circle at 33% 33%, #B24931 5%, #942F2C 80%, #631F1B 100%);
+.fullPage {
+  overflow: hidden;
+  background: radial-gradient(circle at 33% 33%, #B24931 5%, #942F2C 80%, #631F1B 100%);
   height: 100vh;
   position: absolute;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
+  padding: 2.5vw;
   width: 100vw;
 }
-.row{
+
+.row {
 }
 </style>
 
@@ -61,8 +67,8 @@ export default {
       if (response.isSuccess) {
         let fullList = response.data.sort((a, b) => b.points - a.points);
         let columns = []
-        while(fullList.length)
-        columns.push(fullList.splice(0, this.maxInColumn))
+        while (fullList.length)
+          columns.push(fullList.splice(0, this.maxInColumn))
         this.scoreboard = columns;
       }
     }
@@ -75,7 +81,7 @@ export default {
   data() {
     return {
       scoreboard: [],
-      maxInColumn: 6
+      maxInColumn: 10
     }
   }
 }
