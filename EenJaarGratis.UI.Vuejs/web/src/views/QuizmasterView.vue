@@ -2,7 +2,11 @@
   <b-container>
     <div class="question-navigation-container mt-1">
       <b-button @click="previousQuestion" variant="outline-secondary">Vorige</b-button>
-      <b-button @click="reloadScoreboard" variant="outline-secondary">Scorebord</b-button>
+      <b-button-group>
+        <b-button @click="reloadScoreboard" variant="outline-secondary">Scorebord</b-button>
+        <b-button v-if="!showQuestionState" @click="showQuestion" variant="outline-secondary">Toon</b-button>
+        <b-button v-if="showQuestionState" @click="hideQuestion" variant="outline-secondary">Verberg</b-button>
+      </b-button-group>
       <b-button @click="nextQuestion" variant="outline-secondary">Volgende</b-button>
     </div>
     <h1 v-if="question === undefined">Klik op vorige!</h1>
@@ -26,7 +30,8 @@
     </div>
 
     <b-accordion>
-      <b-accordion-item :visible="questionGroup === this.currentQuestionGroup" :title="'Groep ' + (index+1)" v-for="(questionGroup, index) in questionGroups" :key="questionGroup.id">
+      <b-accordion-item :visible="questionGroup === this.currentQuestionGroup" :title="'Groep ' + (index+1)"
+                        v-for="(questionGroup, index) in questionGroups" :key="questionGroup.id">
         <b-button-group>
           <b-button block variant="outline-secondary" @click="startScanning(questionGroup)"><i
               class="lni lni-search-alt"></i> Scannen
@@ -36,7 +41,8 @@
         </b-button-group>
         <b-table :items="questionGroup.players" :fields="[{key:'name', label:'Naam'}, {key:'actions', label:''}]">
           <template #cell(actions)="row">
-            <b-button @click="removePlayerFromGroup(questionGroup, row.item)" variant="outline-danger"><i class="lni lni-trash-can"></i></b-button>
+            <b-button @click="removePlayerFromGroup(questionGroup, row.item)" variant="outline-danger"><i
+                class="lni lni-trash-can"></i></b-button>
           </template>
         </b-table>
       </b-accordion-item>
@@ -51,9 +57,11 @@
       </b-button-group>
       <qrcode-stream :torch=this.torch :camera=camera @decode="onDecode">
       </qrcode-stream>
-      <b-table :items="this.currentQuestionGroup.players" :fields="[{key:'name', label:'Naam'}, {key:'actions', label:''}]">
+      <b-table :items="this.currentQuestionGroup.players"
+               :fields="[{key:'name', label:'Naam'}, {key:'actions', label:''}]">
         <template #cell(actions)="row">
-          <b-button @click="removePlayerFromGroup(this.currentQuestionGroup, row.item)" variant="outline-danger"><i class="lni lni-trash-can"></i></b-button>
+          <b-button @click="removePlayerFromGroup(this.currentQuestionGroup, row.item)" variant="outline-danger"><i
+              class="lni lni-trash-can"></i></b-button>
         </template>
       </b-table>
     </b-container>
@@ -84,13 +92,14 @@ export default {
       currentQuestionGroup: {},
       scanView: false,
       torch: false,
-      camera: 'off'
+      camera: 'off',
+      showQuestionState:false
     }
   },
   computed: {
     ...mapGetters({
       signalR: "getSignalR",
-      toast:  "getToast",
+      toast: "getToast",
       players: "getPlayers",
       questions: "getQuestions",
       questionIndex: "getCurrentQuestionIndex"
@@ -103,17 +112,33 @@ export default {
     }),
 
     async previousQuestion() {
-      this.previousQuestionIndex()
+      this.previousQuestionIndex();
       this.loadQuestion();
       await this.loadQuestionGroups();
-    },
+
+      this.hideQuestion();
+      await this.reloadScoreboard();
+
+      },
+
     async reloadScoreboard() {
       this.signalR.invoke("ReloadScoreboard")
+    },
+    showQuestion() {
+      this.signalR.invoke("ShowQuestion", JSON.stringify(this.question))
+      this.showQuestionState = true
+    },
+    hideQuestion() {
+      this.signalR.invoke("HideQuestion")
+      this.showQuestionState = false;
     },
     async nextQuestion() {
       this.nextQuestionIndex();
       this.loadQuestion();
       await this.loadQuestionGroups();
+
+      this.hideQuestion();
+      await this.reloadScoreboard();
     },
 
     async rescan() {
@@ -152,11 +177,11 @@ export default {
         }
       }
     },
-    async removePlayerFromGroup(group, player){
+    async removePlayerFromGroup(group, player) {
       const response = await Gateway.Players.deleteQuestionGroupsPlayer(group, player);
       if (response.isSuccess) {
         const index = group.players.indexOf(player);
-        group.players.splice(index,1)
+        group.players.splice(index, 1)
 
       }
     },

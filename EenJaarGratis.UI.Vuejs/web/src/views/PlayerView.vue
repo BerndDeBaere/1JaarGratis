@@ -5,12 +5,16 @@
     <h1 class="text-center text-xl mt-4" v-if='this.player.name !== ""'>{{ player.name }}</h1>
 
     <b-form-group>
-      <label for="Name">Naam</label>
+      <label>Naam</label>
       <b-form-input placeholder="Naam invullen" v-model=this.player.name></b-form-input>
     </b-form-group>
     <b-form-group>
-      <label for="Name">Code</label>
+      <label>Code</label>
       <b-form-input placeholder="Code inscannen" v-model=this.player.code></b-form-input>
+    </b-form-group>
+    <b-form-group>
+      <label>Startpunten</label>
+      <b-form-input type="Number" placeholder="Startpunten" v-model=this.player.pointOffset></b-form-input>
     </b-form-group>
 
     <b-button-group class="float-end">
@@ -56,12 +60,14 @@ export default ({
       this.isNew = true;
       this.player.name = ""
       this.player.code = ""
+      this.player.pointOffset = ""
     }
   },
   computed: {
     ...mapGetters({
       players: 'getPlayers',
-      toast: "getToast"
+      toast: "getToast",
+      signalR:"getSignalR"
     })
   },
   components:{
@@ -86,6 +92,7 @@ export default ({
       const response = await this.postPlayer(this.player);
       if(response.isSuccess) {
         router.push({name: 'players'});
+        this.signalR.invoke("ReloadPlayers")
       }
       else{
         this.showToast(response.data)
@@ -94,6 +101,7 @@ export default ({
     async updatePlayer() {
       const response = await this.putPlayer(this.player);
       if(response.isSuccess) {
+        this.signalR.invoke("ReloadPlayers")
         router.push({name: 'players'});
       }
       else{

@@ -58,7 +58,7 @@ public class PlayerRepository : BaseRepository<Player>, IPlayerRepository
     }
 
     const string ScoreBoardSql = @"
-select P.Id, P.Name, IFNULL(SUM(PointsPerGroup.Points),0) Points
+select P.Id, P.Name, IFNULL(SUM(PointsPerGroup.Points),0) + P.PointOffset Points
     from Players P
 
 left join PlayerQuestionGroup PQG

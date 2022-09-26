@@ -14,14 +14,6 @@ export default {
       url: window.location
     };
   },
-  mounted() {
-    this.$store.dispatch("fetchPlayers")
-  },
-  computed: {
-    players() {
-      return this.$store.state.players;
-    }
-  }
 }
 
 </script>

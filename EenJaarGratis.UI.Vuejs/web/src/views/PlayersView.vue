@@ -42,6 +42,10 @@ export default {
           label: 'Code'
         },
         {
+          key: 'pointOffset',
+          label: 'Startpunten'
+        },
+        {
           key: 'actions',
           label: 'Actions',
           class: 'col-2'
@@ -51,7 +55,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      players: 'getPlayers'
+      players: 'getPlayers',
+      signalR: "getSignalR"
     })
   },
   methods: {
@@ -63,6 +68,7 @@ export default {
     },
     async removePlayer(player) {
       await this.deletePlayer(player)
+      this.signalR.invoke("ReloadPlayers")
     },
     editPlayer(player) {
       router.push({name: 'editPlayer', params: {id: player.id}})

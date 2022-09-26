@@ -11,6 +11,19 @@
       </div>
     </div>
 
+    <b-modal id="modalQuestion" content-class="bg-gradent" v-model="this.showQuestion" hide-footer hide-header centered size="xl"
+             :title="question.question">
+        <p>
+          A) {{ this.question.answer1 }}
+        </p>
+        <p>
+          B) {{ this.question.answer2 }}
+        </p>
+        <p>
+          C) {{ this.question.answer3 }}
+        </p>
+    </b-modal>
+
 
   </div>
 </template>
@@ -18,6 +31,14 @@
 <style>
 .fullHeight {
   height: 100%;
+}
+
+.bg-gradent{
+  font-size: 5rem;
+  background: radial-gradient(circle at 33% 33%, #B24931 5%, #942F2C 80%, #631F1B 100%);
+}
+.bg-gradent p{
+  color: white;
 }
 
 .fullPage {
@@ -29,9 +50,6 @@
   left: 0;
   padding: 2.5vw;
   width: 100vw;
-}
-
-.row {
 }
 </style>
 
@@ -49,8 +67,16 @@ export default {
   async mounted() {
     await this.updateScoreboard()
 
-    await this.signalR.on("UpdatePlayers", async () => {
+    await this.signalR.on("ReloadPlayers", async () => {
       await this.updateScoreboard()
+    })
+    this.signalR.on("ShowQuestion", async (question) => {
+      this.question = JSON.parse(question);
+      this.showQuestion = true;
+    })
+    await this.signalR.on("HideQuestion", async () => {
+      this.question = {};
+      this.showQuestion = false;
     })
     await this.signalR.on("ReloadScoreboard", async () => {
       await this.updateScoreboard()
@@ -81,6 +107,8 @@ export default {
   data() {
     return {
       scoreboard: [],
+      question: {},
+      showQuestion: false,
       maxInColumn: 10
     }
   }

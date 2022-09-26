@@ -23,6 +23,6 @@ public class CreatePlayerHandler : IRequestHandler<CreatePlayerRequest, PlayerRe
         var existingPlayer = await _playerRepository.GetByCode(request.Code);
         if (existingPlayer != null)
             throw new AppException("Code al in gebruik");
-        return _mapper.Map<PlayerResponse>(await _playerRepository.Insert(Service.Storage.Domain.Player.Create(request.Name, request.Code), cancellationToken));
+        return _mapper.Map<PlayerResponse>(await _playerRepository.Insert(Service.Storage.Domain.Player.Create(request.Name, request.Code, request.PointOffset), cancellationToken));
     }
 }
