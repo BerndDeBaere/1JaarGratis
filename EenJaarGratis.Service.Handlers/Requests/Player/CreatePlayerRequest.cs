@@ -8,4 +8,5 @@ public class CreatePlayerRequest : IRequest<PlayerResponse>
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!;
     public int PointOffset { get; set; }
+    public int QuestionCount { get; set; }
 }

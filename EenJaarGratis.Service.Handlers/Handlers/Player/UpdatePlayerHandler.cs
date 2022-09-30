@@ -21,10 +21,7 @@ public class UpdatePlayerHandler : IRequestHandler<UpdatePlayerRequest, PlayerRe
     public async Task<PlayerResponse?> Handle(UpdatePlayerRequest request, CancellationToken cancellationToken)
     {
         Service.Storage.Domain.Player? player = await _playerRepository.GetById(request.Id);
-        if (player is null)
-        {
-            return null;
-        }
+
         _mapper.Map(request, player);
         
         return _mapper.Map<PlayerResponse>(await _playerRepository.Update(player, cancellationToken));

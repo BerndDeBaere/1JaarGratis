@@ -6,6 +6,7 @@
         <b-button @click="reloadScoreboard" variant="outline-secondary">Scorebord</b-button>
         <b-button v-if="!showQuestionState" @click="showQuestion" variant="outline-secondary">Toon</b-button>
         <b-button v-if="showQuestionState" @click="hideQuestion" variant="outline-secondary">Verberg</b-button>
+        <b-button @click="selectPlayers" variant="outline-secondary">selectPlayers</b-button>
       </b-button-group>
       <b-button @click="nextQuestion" variant="outline-secondary">Volgende</b-button>
     </div>
@@ -120,6 +121,9 @@ export default {
       await this.reloadScoreboard();
 
       },
+    async selectPlayers(){
+      this.signalR.invoke("SelectRandomPlayers")
+    },
 
     async reloadScoreboard() {
       this.signalR.invoke("ReloadScoreboard")

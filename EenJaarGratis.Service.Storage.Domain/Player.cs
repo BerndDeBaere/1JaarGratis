@@ -10,7 +10,8 @@ public class Player: BaseEntity
 
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!;
-    public int PointOffset { get; set; } = 0;
+    public int PointOffset { get; set; }
+    public int QuestionCount { get; set; }
 
     public ICollection<QuestionGroup> QuestionGroups { get; set; } = new List<QuestionGroup>();
 
@@ -19,6 +20,6 @@ public class Player: BaseEntity
     {
         Name = name,
         Code = code,
-        PointOffset = pointOffset
+        PointOffset = pointOffset,
     };
 }

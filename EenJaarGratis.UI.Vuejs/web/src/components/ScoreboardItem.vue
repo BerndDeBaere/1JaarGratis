@@ -1,11 +1,11 @@
 <template>
-  <div class="scoreboard-cart-outer">
-    <div class="scoreboard-cart-inner">
+  <div class="scoreboard-cart-outer" >
+    <div class="scoreboard-cart-inner" :class="{'selected': isSelected}">
       <div>
-        {{ index }}) {{ name }}
+        {{ index }}) {{ player.name }}
       </div>
       <div>
-        {{ points }}
+        {{ player.points }}
       </div>
     </div>
   </div>
@@ -15,10 +15,16 @@
 export default {
   name: "ScoreboardItem",
   props: {
-    name: String,
+    selectedPlayers: Array,
+    player:{},
     height: Number,
-    points: Number,
     index: Number
+  },
+  computed:{
+    isSelected(){
+      console.log(this.selectedPlayers.find(sp => sp.id === this.player.id))
+      return this.selectedPlayers.find(sp => sp.id === this.player.id) !== undefined
+    }
   }
 }
 </script>
@@ -29,6 +35,10 @@ export default {
   display: flex;
   align-items: center;
   padding: 0.75rem;
+}
+
+.selected{
+  text-decoration: underline;
 }
 
 .scoreboard-cart-inner {

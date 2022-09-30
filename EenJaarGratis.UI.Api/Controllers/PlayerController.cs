@@ -10,17 +10,12 @@ namespace EenJaarGratis.UI.Api.Controllers;
 [Route("[controller]")]
 public class PlayerController : ControllerBase
 {
-    private readonly ILogger<PlayerController> _logger;
     private readonly IMediator _mediator;
 
-    private readonly IHubContext<SignalRHub> _hubContext;
 
-    public PlayerController(ILogger<PlayerController> logger, IMediator mediator,
-        IHubContext<SignalRHub> hubContext)
+    public PlayerController(IMediator mediator)
     {
-        _logger = logger;
         _mediator = mediator;
-        _hubContext = hubContext;
     }
     
     [HttpGet]
@@ -29,17 +24,22 @@ public class PlayerController : ControllerBase
         return Ok(await _mediator.Send(new GetPlayersRequest(), cancellationToken));
     }
 
+    [HttpGet("Random")]
+    public async Task<IActionResult> GetRandom(CancellationToken cancellationToken)
+    {
+        return Ok(await _mediator.Send(new GetRandomPlayersRequest(), cancellationToken));
+    }
+
+    
     [HttpGet("Scoreboard")]
     public async Task<IActionResult> GetScoreboard(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Get ScoreBoard");
         return Ok(await _mediator.Send(new GetScoreBoardPlayersRequest(), cancellationToken));
     }
 
     [HttpPost]
     public async Task<IActionResult> Post(CreatePlayerRequest request)
     {
-        _logger.LogInformation("Create player");
         var result = Ok(await _mediator.Send(request));
         return result;
     }
@@ -47,7 +47,6 @@ public class PlayerController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Put(UpdatePlayerRequest request)
     {
-        _logger.LogInformation("Update player");
         var result = Ok(await _mediator.Send(request));
         return result;
     }
@@ -55,7 +54,6 @@ public class PlayerController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Delete player with id {id}", id);
         var result = Ok(await _mediator.Send(new DeletePlayerRequest { Id = id }, cancellationToken));
         return result;
     }
@@ -64,7 +62,6 @@ public class PlayerController : ControllerBase
     public async Task<IActionResult> PostQuestionGroupPlayer([FromRoute] int id, [FromRoute] int questionGroupId,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Create Playergroup");
         return Ok(await _mediator.Send(new CreateQuestionGroupPlayerRequest
         {
             PlayerId = id,
@@ -76,7 +73,6 @@ public class PlayerController : ControllerBase
     public async Task<IActionResult> DeleteQuestionGroupPlayer([FromRoute] int id, [FromRoute] int questionGroupId,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Create Playergroup");
         return Ok(await _mediator.Send(new DeleteQuestionGroupPlayerRequest
         {
             PlayerId = id,

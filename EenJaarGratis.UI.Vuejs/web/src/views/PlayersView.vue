@@ -46,6 +46,10 @@ export default {
           label: 'Startpunten'
         },
         {
+          key: 'questionCount',
+          label: 'Aantal keer naar voor'
+        },
+        {
           key: 'actions',
           label: 'Actions',
           class: 'col-2'

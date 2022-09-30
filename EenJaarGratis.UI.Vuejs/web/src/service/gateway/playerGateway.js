@@ -10,6 +10,13 @@ export default {
         } catch (err) {
             return new GatewayResponse(false, err)
         }
+    }, async getRandom() {
+        try {
+            const response = await axios.get(api_root + "/Player/Random");
+            return new GatewayResponse(true, response.data)
+        } catch (err) {
+            return new GatewayResponse(false, err)
+        }
     }, async delete(player) {
         try {
             const response = await axios.delete(api_root + "/Player/" + {...player}.id);

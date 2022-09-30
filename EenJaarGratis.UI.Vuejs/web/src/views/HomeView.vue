@@ -1,8 +1,12 @@
 <template>
   <b-container>
-    <img :src="'https://api.qrserver.com/v1/create-qr-code/?data=' + url" alt="qrCode">
+    <img :src="'https://api.qrserver.com/v1/create-qr-code/?data=' + url_1" alt="qrCode">
     <br>
-    {{url}}
+    {{url_1}}
+
+    <a :href="url_2">API</a>
+
+    <a></a>
   </b-container>
 </template>
 
@@ -11,7 +15,8 @@ export default {
   name: 'PlayersView',
   setup() {
     return {
-      url: window.location
+      url_1: window.location.protocol + '//' + window.location.host,
+      url_2: window.location.protocol + '//' + window.location.host.replace("8080","10000") + "/Player",
     };
   },
 }

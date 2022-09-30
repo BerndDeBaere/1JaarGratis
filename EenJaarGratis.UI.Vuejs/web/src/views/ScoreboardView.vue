@@ -5,7 +5,7 @@
         <div class="row" :style="{'height': (100/this.maxInColumn)+'%'}" v-for="(player, playerIndex) in column"
              :key=playerIndex>
 
-          <ScoreboardItem :name=player.name :points=player.points
+          <ScoreboardItem :player=player :selectedPlayers=this.selectedPlayers
                           :index=(playerIndex+1+columnIndex*this.maxInColumn)></ScoreboardItem>
         </div>
       </div>
@@ -67,20 +67,24 @@ export default {
   async mounted() {
     await this.updateScoreboard()
 
+
+    await this.signalR.on("SelectRandomPlayers", async () => {
+      await this.selectRandomPlayers();
+    });
     await this.signalR.on("ReloadPlayers", async () => {
       await this.updateScoreboard()
-    })
+    });
     this.signalR.on("ShowQuestion", async (question) => {
       this.question = JSON.parse(question);
       this.showQuestion = true;
-    })
+    });
     await this.signalR.on("HideQuestion", async () => {
       this.question = {};
       this.showQuestion = false;
-    })
+    });
     await this.signalR.on("ReloadScoreboard", async () => {
       await this.updateScoreboard()
-    })
+    });
 
   },
   async unmounted() {
@@ -88,6 +92,12 @@ export default {
     this.signalR.off("ReloadScoreboard")
   },
   methods: {
+    async selectRandomPlayers(){
+      const response = await Gateway.Players.getRandom();
+      if(response.isSuccess) {
+        this.selectedPlayers = response.data;
+      }
+    },
     async updateScoreboard() {
       const response = await Gateway.Players.getScoreboard();
       if (response.isSuccess) {
@@ -97,7 +107,7 @@ export default {
           columns.push(fullList.splice(0, this.maxInColumn))
         this.scoreboard = columns;
       }
-    }
+    },
   },
   computed: {
     ...mapGetters({
@@ -108,10 +118,10 @@ export default {
     return {
       scoreboard: [],
       question: {},
+      selectedPlayers:[],
       showQuestion: false,
       maxInColumn: 10
     }
   }
 }
-
 </script>

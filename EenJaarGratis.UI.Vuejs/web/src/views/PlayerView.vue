@@ -14,8 +14,12 @@
     </b-form-group>
     <b-form-group>
       <label>Startpunten</label>
-      <b-form-input type="Number" placeholder="Startpunten" v-model=this.player.pointOffset></b-form-input>
+      <b-form-input type="number" placeholder="Startpunten" v-model=this.player.pointOffset></b-form-input>
     </b-form-group>
+    <b-form-group>
+    <label>Aantal keer naar voor</label>
+    <b-form-input type="number" placeholder="Startpunten" v-model=this.player.questionCount></b-form-input>
+  </b-form-group>
 
     <b-button-group class="float-end">
       <b-button variant="outline-danger" @click="cancel"><i class="lni lni-cross-circle"></i> Annuleren</b-button>
@@ -60,7 +64,8 @@ export default ({
       this.isNew = true;
       this.player.name = ""
       this.player.code = ""
-      this.player.pointOffset = ""
+      this.player.pointOffset = 0
+      this.player.questionCount = 0
     }
   },
   computed: {
