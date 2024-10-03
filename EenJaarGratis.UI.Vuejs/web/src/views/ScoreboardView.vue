@@ -13,6 +13,7 @@
 
     <b-modal id="modalQuestion" content-class="bg-gradent" v-model="this.showQuestion" hide-footer hide-header centered size="xl"
              :title="question.question">
+      <p>{{ this.question.question }}</p>
         <p>
           A) {{ this.question.answer1 }}
         </p>
@@ -34,7 +35,7 @@
 }
 
 .bg-gradent{
-  font-size: 5rem;
+  font-size: 4rem;
   background: radial-gradient(circle at 33% 33%, #B24931 5%, #942F2C 80%, #631F1B 100%);
 }
 .bg-gradent p{
